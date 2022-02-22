@@ -8,28 +8,6 @@ variable "resource_group_name" {
   description = "Resource group name"
 }
 
-variable "firewall_name" {
-  type        = string
-  description = "Name for the firewall"
-}
-
-variable "subnet_id" {
-  type        = string
-  description = "ID for the subnet of the firewall ip"
-}
-
-variable "sku" {
-  type    = string
-  default = "Standard"
-}
-
-variable "ip_allocation" {
-  type        = string
-  description = "IP Allocation - Static or Dynamic"
-  default     = "Static"
-}
-
-
 variable "firewall_policy_name" {
   type        = string
   description = "Name for the firewall policy"
@@ -51,5 +29,11 @@ variable "app_rule_collections" {
 }
 
 variable "network_rule_collections" {
+    type = map(object({
+        name = string,
+        priority = number,
+        action = string,
+        rules = map(object)
+    }))
   description = "Network rule collections and rules"
 }

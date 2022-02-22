@@ -76,9 +76,9 @@ variable "caching" {
   description = "Caching for the internal OS disk"
 }
 
-variable "sa_type" {
+variable "storage_account_type" {
   type        = string
-  description = "Storage Account Type"
+  description = "Type of sku redundancy for the OS disk"
 }
 
 variable "linux_count" {

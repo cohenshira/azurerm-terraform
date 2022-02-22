@@ -1,4 +1,4 @@
-variable "gw_name" {
+variable "gateway_name" {
   type        = string
   description = "Name for the Virtual Network Gateway"
 }
@@ -19,7 +19,7 @@ variable "ip_allocation" {
   default     = "Dynamic"
 }
 
-variable "gw_type" {
+variable "gateway_type" {
   type        = string
   description = "Gateway Type"
   default     = "Vpn"
@@ -47,7 +47,7 @@ variable "generation" {
   default     = "Generation1"
 }
 
-variable "gw_sku" {
+variable "gateway_sku" {
   type        = string
   description = "Gateway SKU"
   default     = "Standard"

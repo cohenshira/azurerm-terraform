@@ -1,9 +1,9 @@
-variable "sa_name" {
+variable "storage_account_name" {
   type        = string
   description = "Storage account name"
 }
 
-variable "rg_name" {
+variable "resource_group_name" {
   type        = string
   description = "Resource group name for the created resources"
 }
@@ -40,6 +40,17 @@ variable "private_dns_zone_name" {
 }
 
 variable "vnet_id" {
-  type = string
+  type        = string
   description = "Virtual network ID"
+}
+
+variable "virtual_link_name" {
+  type        = string
+  description = "Virtual link name"
+}
+
+variable "subresource_names" {
+  type        = list(string)
+  description = "A list of subresource names which the Private Endpoint is able to connect to"
+  default     = ["blob"]
 }

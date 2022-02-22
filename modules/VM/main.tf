@@ -1,4 +1,4 @@
-resource "azurerm_public_ip" "vmpublicip" {
+resource "azurerm_public_ip" "vm_public_ip" {
   name                = "${var.hostname}-pip"
   location            = var.location
   resource_group_name = var.resource_group_name
@@ -15,11 +15,11 @@ resource "azurerm_network_interface" "vmnic" {
     name                          = "${var.hostname}-ipconf"
     subnet_id                     = var.subnet_id
     private_ip_address_allocation = var.ip_allocation
-    public_ip_address_id          = azurerm_public_ip.vmpublicip.id
+    public_ip_address_id          = azurerm_public_ip.vm_public_ip.id
   }
 }
 
-resource "azurerm_linux_virtual_machine" "vm" {
+resource "azurerm_linux_virtual_machine" "linux_vm" {
   count                           = var.linux_count
   name                            = var.hostname
   resource_group_name             = var.resource_group_name
@@ -35,7 +35,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
 
   os_disk {
     caching              = var.caching
-    storage_account_type = var.sa_type
+    storage_account_type = var.storage_account_type
   }
 
   source_image_reference {
@@ -47,7 +47,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
 }
 
 
-resource "azurerm_windows_virtual_machine" "winvm" {
+resource "azurerm_windows_virtual_machine" "windows_vm" {
   count                 = var.windows_count
   name                  = var.hostname
   resource_group_name   = var.resource_group_name
@@ -60,7 +60,7 @@ resource "azurerm_windows_virtual_machine" "winvm" {
 
   os_disk {
     caching              = var.caching
-    storage_account_type = var.sa_type
+    storage_account_type = var.storage_account_type
   }
 
   source_image_reference {
