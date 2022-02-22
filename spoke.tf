@@ -29,7 +29,7 @@ locals {
       priority                     = 1001
       direction                    = "Inbound"
       access                       = "Allow"
-      protocol                     = ["*"]
+      protocol                     = "*"
       source_port_ranges           = ["*"]
       destination_port_ranges      = ["22"]
       source_address_prefixes      = ["*"]

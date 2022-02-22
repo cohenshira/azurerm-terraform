@@ -1,5 +1,5 @@
 variable "location" {
-  type    = string
+  type = string
 }
 
 variable "resource_group_name" {
@@ -13,7 +13,17 @@ variable "nsg_name" {
 }
 
 variable "nsg_rules" {
-  type        = map(any)
+  type = map(object({
+    name                         = string
+    priority                     = number
+    direction                    = string
+    access                       = string
+    protocol                     = string
+    source_port_ranges           = list(string)
+    destination_port_ranges      = list(string)
+    source_address_prefixes      = list(string)
+    destination_address_prefixes = list(string)
+  }))
   description = "Rules of the network security group"
 }
 
