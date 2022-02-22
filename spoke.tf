@@ -13,36 +13,37 @@ locals {
   spoke_nsg_name = "shira-spoke-nsg-tf"
   spoke_nsg_rules = {
     ssh_out = {
-      name                       = "ssh-out"
-      priority                   = 1001
-      direction                  = "Outbound"
-      access                     = "Allow"
-      protocol                   = "Tcp"
-      source_port_range          = "*"
-      destination_port_range     = "22"
-      source_address_prefix      = "*"
-      destination_address_prefix = "*"
+      name                         = "ssh-out"
+      priority                     = 1001
+      direction                    = "Outbound"
+      access                       = "Allow"
+      protocol                     = "Tcp"
+      source_port_ranges           = ["*"]
+      destination_port_ranges      = ["22"]
+      source_address_prefixes      = ["*"]
+      destination_address_prefixes = ["*"]
     },
 
     ssh_in = {
-      name                       = "ssh-in"
-      priority                   = 1001
-      direction                  = "Inbound"
-      access                     = "Allow"
-      protocol                   = "*"
-      source_port_range          = "*"
-      destination_port_range     = "22"
-      source_address_prefix      = "*"
-      destination_address_prefix = "*"
+      name                         = "ssh-in"
+      priority                     = 1001
+      direction                    = "Inbound"
+      access                       = "Allow"
+      protocol                     = ["*"]
+      source_port_ranges           = ["*"]
+      destination_port_ranges      = ["22"]
+      source_address_prefixes      = ["*"]
+      destination_address_prefixes = ["*"]
     }
   }
   storage_account_name     = "shiraspokesatf"
   account_tier             = "Standard"
   account_replication_type = "LRS"
   is_manual_connection     = false
-  virtual_link_name = "shira-private-endpoint-virual-link"
+  virtual_link_name        = "shira-private-endpoint-virual-link"
   spoke_route_table_name   = "shira-spoke-route-table-tf"
   spoke_peer_name          = "SpokeToHub"
+  is_linux                 = true
   spoke_hostname           = "shira-spoke-vm-tf"
   spoke_vm_size            = "Standard_B1s"
   spoke_os_disk = {
@@ -72,6 +73,9 @@ locals {
       next_hop_type  = "VirtualAppliance"
     }
   }
+  spoke_use_remote_gateways = true
+  spoke_gateway_transit     = false
+
 }
 
 
@@ -80,18 +84,13 @@ resource "azurerm_resource_group" "spoke_rg" {
   location = local.location
 }
 
-module "spoke-vnet" {
-  source                    = "./modules/Vnet"
-  location                  = azurerm_resource_group.spoke_rg.location
-  resource_group_name       = azurerm_resource_group.spoke_rg.name
-  vnet_name                 = local.spoke_vnet_name
-  vnet_address_space        = local.spoke_vnet_address_space
-  subnets                   = local.spoke_subnets
-  peer_name                 = local.spoke_peer_name
-  remote_virtual_network_id = module.hub-vnet.vnet_id
-  remote_gateways           = true
-  gateway_transit           = false
-
+module "spoke_vnet" {
+  source              = "./modules/Vnet"
+  location            = azurerm_resource_group.spoke_rg.location
+  resource_group_name = azurerm_resource_group.spoke_rg.name
+  vnet_name           = local.spoke_vnet_name
+  vnet_address_space  = local.spoke_vnet_address_space
+  subnets             = local.spoke_subnets
   depends_on = [
     azurerm_resource_group.spoke_rg
   ]
@@ -124,7 +123,7 @@ module "to_hub_route_table" {
   ]
 }
 
-module "storage-account" {
+module "storage_account" {
   source                   = "./modules/StorageAccount"
   storage_account_name     = local.storage_account_name
   resource_group_name      = azurerm_resource_group.spoke_rg.name
@@ -134,7 +133,7 @@ module "storage-account" {
   is_manual_connection     = local.is_manual_connection
   subnet_id                = module.spoke_vnet.subnet_ids_list[0]
   vnet_id                  = module.spoke_vnet.id
-  virtual_link_name        = local.virtual_link_name
+  network_link_name        = local.virtual_link_name
 
 }
 
@@ -142,8 +141,7 @@ module "spoke_virtual_machine" {
   source               = "./modules/VM"
   location             = azurerm_resource_group.spoke_rg.location
   resource_group_name  = azurerm_resource_group.spoke_rg.name
-  linux_count          = local.linux_vm_count
-  windows_count        = local.windows_vm_count
+  is_linux             = local.is_linux
   subnet_id            = lookup(module.spoke_vnet.created_subnets, local.spoke_subnets.default_subnet.name)
   hostname             = local.spoke_hostname
   vm_size              = local.spoke_vm_size
@@ -158,5 +156,26 @@ module "spoke_virtual_machine" {
 
   depends_on = [
     module.spoke_vnet.object
+  ]
+}
+
+
+module "hub_spoke_peering" {
+  source                = "./modules/TwoWayPeering"
+  resource_group_name_1 = azurerm_resource_group.rg.name
+  resource_group_name_2 = azurerm_resource_group.spoke_rg.name
+  peer_name_1           = local.hub_peer_name
+  peer_name_2           = local.spoke_peer_name
+  vnet_name_1           = module.hub_vnet.name
+  vnet_name_2           = module.spoke_vnet.name
+  vnet_id_1             = module.hub_vnet.id
+  vnet_id_2             = module.spoke_vnet.id
+  remote_gateways_1     = local.hub_use_remote_gateways
+  gateway_transit_1     = local.hub_gateway_transit
+  remote_gateways_2     = local.spoke_use_remote_gateways
+  gateway_transit_2     = local.spoke_gateway_transit
+
+  depends_on = [
+    module.hub_vnet.object, module.spoke_vnet.object
   ]
 }

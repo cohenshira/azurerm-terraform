@@ -4,28 +4,28 @@ variable "location" {
 }
 
 variable "tenant_id" {
-  type    = string
-  default = "https://login.microsoftonline.com/c9ad96a7-2bac-49a7-abf6-8e932f60bf2b"
+  type      = string
+  sensitive = true
 }
 
 variable "audience" {
-  type    = string
-  default = "41b23e61-6c1e-4545-b367-cd054e0ed4b4"
+  type      = string
+  sensitive = true
 }
 
 variable "issuer" {
-  type    = string
-  default = "https://sts.windows.net/c9ad96a7-2bac-49a7-abf6-8e932f60bf2b/"
+  type      = string
+  sensitive = true
 }
 
 variable "vm_user" {
   type        = string
   description = "User to connect the virtual machine"
-  default     = "shira"
+  sensitive   = true
 }
 
 variable "password" {
   type        = string
   description = "Passowrd authentication"
-  default     = "Aa1234567890"
+  sensitive   = true
 }

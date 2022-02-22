@@ -26,7 +26,7 @@ resource "azurerm_private_endpoint" "private_endpoint" {
   subnet_id           = var.subnet_id
 
   private_service_connection {
-    name                           = "${var.stoeage_account_name}-private-service-connection"
+    name                           = "${var.storage_account_name}-private-service-connection"
     private_connection_resource_id = azurerm_storage_account.storage_account.id
     is_manual_connection           = var.is_manual_connection
     subresource_names              = var.subresource_names

@@ -44,7 +44,7 @@ variable "vnet_id" {
   description = "Virtual network ID"
 }
 
-variable "virtual_link_name" {
+variable "network_link_name" {
   type        = string
   description = "Virtual link name"
 }

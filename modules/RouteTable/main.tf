@@ -4,7 +4,7 @@ resource "azurerm_route_table" "route_table" {
   resource_group_name = var.resource_group_name
 }
 
-resource "azurerm_route" "_route" {
+resource "azurerm_route" "route" {
   for_each               = var.routes
   resource_group_name    = var.resource_group_name
   route_table_name       = azurerm_route_table.route_table.name

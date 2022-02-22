@@ -1,29 +1,36 @@
 output "object" {
-  value = azurerm_virtual_network.vnet
+  description = "Virtual Network object"
+  value       = azurerm_virtual_network.vnet
 }
 output "id" {
-  value = azurerm_virtual_network.vnet.id
+  description = "Virtual Network ID"
+  value       = azurerm_virtual_network.vnet.id
 }
 output "name" {
-  value = azurerm_virtual_network.vnet.name
+  description = "Virtual Network name"
+  value       = azurerm_virtual_network.vnet.name
 }
 
 output "vnet_address_prefix" {
-  value = azurerm_virtual_network.vnet.address_space[0]
+  description = "Virtual Network address space"
+  value       = azurerm_virtual_network.vnet.address_space[0]
 }
 
 output "subnet" {
-  value = azurerm_subnet.subnet
+  description = "Subnet object"
+  value       = azurerm_subnet.subnet
 }
 
 output "created_subnets" {
+  description = "map of each subnet name and subnet ID"
   value = {
     for subnet in azurerm_subnet.subnet : subnet.name => subnet.id
   }
 }
 
 output "subnet_ids_list" {
-  value = [for subnet in azurerm_subnet.subnet : subnet.id]
+  description = "List of the subnet ids"
+  value       = [for subnet in azurerm_subnet.subnet : subnet.id]
 }
 
 

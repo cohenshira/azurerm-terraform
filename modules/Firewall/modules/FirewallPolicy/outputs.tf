@@ -1,9 +1,12 @@
 output "object" {
-    value = azurerm_firewall_policy.firewall_policy
+  description = "Firewall policy object"
+  value       = azurerm_firewall_policy.firewall_policy
 }
 output "id" {
-    value = azurerm_firewall_policy.firewall_policy.id
+  description = "Firewall policy ID"
+  value = azurerm_firewall_policy.firewall_policy.id
 }
 output "name" {
-    value = azurerm_firewall_policy.firewall_policy.name
+  description = "Firewall policy name"
+  value = azurerm_firewall_policy.firewall_policy.name
 }

@@ -13,7 +13,7 @@ variable "nsg_name" {
 }
 
 variable "nsg_rules" {
-  type        = map
+  type        = map(any)
   description = "Rules of the network security group"
 }
 

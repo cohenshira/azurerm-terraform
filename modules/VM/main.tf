@@ -20,7 +20,7 @@ resource "azurerm_network_interface" "vmnic" {
 }
 
 resource "azurerm_linux_virtual_machine" "linux_vm" {
-  count                           = var.linux_count
+  count                           = var.is_linux ? 1 : 0
   name                            = var.hostname
   resource_group_name             = var.resource_group_name
   location                        = var.location
@@ -48,7 +48,7 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
 
 
 resource "azurerm_windows_virtual_machine" "windows_vm" {
-  count                 = var.windows_count
+  count                 = var.is_linux ? 0 : 1
   name                  = var.hostname
   resource_group_name   = var.resource_group_name
   location              = var.location

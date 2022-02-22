@@ -26,7 +26,6 @@ variable "subnet_id" {
 variable "hostname" {
   type        = string
   description = "Name For The Virtual Machine"
-  default     = "newvm"
 }
 
 variable "vm_size" {
@@ -81,12 +80,7 @@ variable "storage_account_type" {
   description = "Type of sku redundancy for the OS disk"
 }
 
-variable "linux_count" {
-  type        = number
-  description = "If count=0, linux VM would not create"
-}
-
-variable "windows_count" {
-  type        = number
-  description = "If count=0, windows VM would not create"
+variable "is_linux" {
+  type        = bool
+  description = "If value eauals true, a linux machine will be created.Else, a windows machine will be created"
 }

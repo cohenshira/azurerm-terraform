@@ -40,8 +40,6 @@ locals {
   hub_gateway_name         = "shira-hub-gw-tf"
   hub_client_address_space = ["172.20.0.0/24"]
   auth_type                = ["AAD"]
-  linux_vm_count           = 1
-  windows_vm_count         = 0
   hub_hostname             = "shira-hub-vm-tf"
   hub_vm_size              = "Standard_B1s"
   hub_os_disk = {
@@ -66,6 +64,8 @@ locals {
       next_hop_type  = "VirtualAppliance"
     }
   }
+  hub_use_remote_gateways = false
+  hub_gateway_transit     = true
 
 }
 
@@ -86,10 +86,6 @@ module "hub_vnet" {
   vnet_name                 = local.hub_vnet_name
   vnet_address_space        = local.hub_vnet_address_space
   subnets                   = local.hub_subnets
-  peer_name                 = local.hub_peer_name
-  remote_virtual_network_id = module.spoke-vnet.vnet_id
-  remote_gateways           = false
-  gateway_transit           = true
   depends_on = [
     azurerm_resource_group.rg
   ]
@@ -101,7 +97,7 @@ module "hub_firewall" {
   resource_group_name                 = azurerm_resource_group.rg.name
   firewall_name                       = local.firewall_name
   firewall_policy_name                = local.firewall_policy_name
-  firewall_rule_collection_group_name = local.firewll_rule_collection_group_name
+  firewall_rule_collection_group_name = local.firewall_rule_collection_group_name
   subnet_id                           = lookup(module.hub_vnet.created_subnets, "AzureFirewallSubnet")
   priority                            = local.priority
   app_rule_collections                = local.app_rule_collections
@@ -134,7 +130,7 @@ module "to_spoke_route_table" {
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   routes              = local.hub_routes
-  next_hop_ip         = module.hub-firewall.firewall_private_ip
+  next_hop_ip         = module.hub_firewall.firewall_private_ip
   subnet_ids          = [lookup(module.hub_vnet.created_subnets, "GatewaySubnet")]
   depends_on = [
     module.spoke_vnet, module.hub_vnet, module.hub_firewall.object
@@ -147,8 +143,7 @@ module "hub_virtual_machine" {
   source               = "./modules/VM"
   location             = azurerm_resource_group.rg.location
   resource_group_name  = azurerm_resource_group.rg.name
-  linux_count          = local.linux_vm_count
-  windows_count        = local.windows_vm_count
+  is_linux             = local.is_linux
   subnet_id            = lookup(module.hub_vnet.created_subnets, local.hub_subnets.default_subnet.name)
   hostname             = local.hub_hostname
   vm_size              = local.hub_vm_size
