@@ -46,10 +46,22 @@ variable "priority" {
 }
 
 variable "app_rule_collections" {
-  type        = map
+  type        = map(any)
   description = "Application rule collections and rules"
 }
 
 variable "network_rule_collections" {
+  type = map(object({
+    name     = string,
+    priority = number,
+    action   = string,
+    rules = map(object({
+      name                  = string
+      protocols             = list(string)
+      source_addresses      = list(string)
+      destination_addresses = list(string)
+      destination_ports     = list(string)
+    }))
+  }))
   description = "Network rule collections and rules"
 }
