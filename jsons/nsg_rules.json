@@ -6,9 +6,9 @@
         "access": "Allow",
         "protocol": "Tcp",
         "source_port_range": "*",
-        "destination_port_ranges": ["22"],
-        "source_address_prefixes": ["*"],
-        "destination_address_prefixes": ["*"]
+        "destination_port_range": "22",
+        "source_address_prefix": "*",
+        "destination_address_prefix": "*"
     },
     "ssh_in": {
         "name": "ssh-in",
@@ -17,8 +17,8 @@
         "access": "Allow",
         "protocol": "*",
         "source_port_range": "*",
-        "destination_port_ranges": ["22"],
-        "source_address_prefixes": ["*"],
-        "destination_address_prefixes": ["*"]
+        "destination_port_range": "22",
+        "source_address_prefix": "*",
+        "destination_address_prefix": "*"
     }
 }

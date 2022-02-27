@@ -16,7 +16,7 @@ locals {
       address_prefixes = ["10.0.2.0/24"]
     }
   }
-  firewall_name                       = "shika-hub-firewall-tf"
+  firewall_name                       = "shira-hub-firewall-tf"
   firewall_policy_name                = "shira-hub-firewall-policy-tf"
   firewall_rule_collection_group_name = "shira-firewall-collenction-group-tf"
   network_priority                    = 100
