@@ -19,11 +19,17 @@ variable "nsg_rules" {
     direction                    = string
     access                       = string
     protocol                     = string
-    source_port_ranges           = list(string)
+    source_port_range            = string
     destination_port_ranges      = list(string)
     source_address_prefixes      = list(string)
     destination_address_prefixes = list(string)
   }))
+  default = {
+    destination_address_prefixes = null
+    destination_port_ranges      = null
+    source_address_prefixes      = null
+    source_port_range            = null
+  }
   description = "Rules of the network security group"
 }
 

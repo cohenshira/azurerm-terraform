@@ -11,31 +11,6 @@ locals {
     }
   }
   spoke_nsg_name = "shira-spoke-nsg-tf"
-  spoke_nsg_rules = {
-    ssh_out = {
-      name                         = "ssh-out"
-      priority                     = 1001
-      direction                    = "Outbound"
-      access                       = "Allow"
-      protocol                     = "Tcp"
-      source_port_ranges           = ["*"]
-      destination_port_ranges      = ["22"]
-      source_address_prefixes      = ["*"]
-      destination_address_prefixes = ["*"]
-    },
-
-    ssh_in = {
-      name                         = "ssh-in"
-      priority                     = 1001
-      direction                    = "Inbound"
-      access                       = "Allow"
-      protocol                     = "*"
-      source_port_ranges           = ["*"]
-      destination_port_ranges      = ["22"]
-      source_address_prefixes      = ["*"]
-      destination_address_prefixes = ["*"]
-    }
-  }
   storage_account_name     = "shiraspokesatf"
   account_tier             = "Standard"
   account_replication_type = "LRS"
@@ -55,23 +30,6 @@ locals {
     offer     = "RHEL"
     sku       = "82gen2"
     version   = "latest"
-  }
-  spoke_routes = {
-    everything = {
-      route_name     = "ToEverything"
-      address_prefix = "0.0.0.0/0"
-      next_hop_type  = "VirtualAppliance"
-    },
-    tohub = {
-      route_name     = "ToHub"
-      address_prefix = local.hub_vnet_address_space[0]
-      next_hop_type  = "VirtualAppliance"
-    },
-    togateway = {
-      route_name     = "ToGateway"
-      address_prefix = local.hub_client_address_space[0]
-      next_hop_type  = "VirtualAppliance"
-    }
   }
   spoke_use_remote_gateways = true
   spoke_gateway_transit     = false
@@ -102,7 +60,7 @@ module "spoke_nsg" {
   location            = azurerm_resource_group.spoke_rg.location
   resource_group_name = azurerm_resource_group.spoke_rg.name
   nsg_name            = local.spoke_nsg_name
-  nsg_rules           = local.spoke_nsg_rules
+  nsg_rules           = jsondecode(file("./jsons/nsg_rules.json"))
   subnet_ids          = module.spoke_vnet.subnet_ids_list
 
   depends_on = [
@@ -115,11 +73,10 @@ module "to_hub_route_table" {
   route_table_name    = local.spoke_route_table_name
   location            = azurerm_resource_group.spoke_rg.location
   resource_group_name = azurerm_resource_group.spoke_rg.name
-  routes              = local.spoke_routes
-  next_hop_ip         = module.hub_firewall.firewall_private_ip
+  routes              = jsondecode(templatefile("./jsons/spoke_routes.json", {to_hub_address_prefix = local.hub_vnet_address_space[0], to_gateway_address_prefix = local.hub_client_address_space[0], next_hop_ip = module.hub_firewall.firewall_private_ip}))
   subnet_ids          = [lookup(module.spoke_vnet.created_subnets, local.spoke_subnets.default_subnet.name)]
   depends_on = [
-    module.spoke_vnet.object, module.hub_firewall.object
+    module.hub_vnet, module.hub_firewall.object, module.spoke_vnet.created_subnets
   ]
 }
 

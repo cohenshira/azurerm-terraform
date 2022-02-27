@@ -1,0 +1,24 @@
+{
+    "ssh_out": {
+        "name": "ssh-out",
+        "priority": 1001,
+        "direction": "Outbound",
+        "access": "Allow",
+        "protocol": "Tcp",
+        "source_port_range": "*",
+        "destination_port_ranges": ["22"],
+        "source_address_prefixes": ["*"],
+        "destination_address_prefixes": ["*"]
+    },
+    "ssh_in": {
+        "name": "ssh-in",
+        "priority": 1001,
+        "direction": "Inbound",
+        "access": "Allow",
+        "protocol": "*",
+        "source_port_range": "*",
+        "destination_port_ranges": ["22"],
+        "source_address_prefixes": ["*"],
+        "destination_address_prefixes": ["*"]
+    }
+}

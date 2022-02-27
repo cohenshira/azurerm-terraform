@@ -1,0 +1,20 @@
+{
+    "to_hub": {
+        "name": "ToHub",
+        "address_prefix": "${to_hub_address_prefix}",
+        "next_hop_type": "VirtualAppliance",
+        "next_hop_ip": "${next_hop_ip}"
+    },
+    "to_everything": {
+        "name": "ToEverything",
+        "address_prefix": "0.0.0.0/0",
+        "next_hop_type": "VirtualAppliance",
+        "next_hop_ip": "${next_hop_ip}"
+    },
+    "to_gateway": {
+        "name": "ToGateway",
+        "address_prefix": "${to_gateway_address_prefix}",
+        "next_hop_type": "VirtualAppliance",
+        "next_hop_ip": "${next_hop_ip}"
+    }
+}

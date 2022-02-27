@@ -13,11 +13,6 @@ variable "route_table_name" {
   description = "Route Table Name"
 }
 
-variable "next_hop_ip" {
-  type        = string
-  description = "The IP that the route will forward packets to "
-  default     = null
-}
 
 variable "subnet_ids" {
   type        = list(string)
@@ -25,6 +20,17 @@ variable "subnet_ids" {
 }
 
 variable "routes" {
-  type        = map(any)
+  type = map(object({
+    name           = string
+    address_prefix = string
+    next_hop_type  = string
+    next_hop_ip    = string
+  }))
+  default = {
+      address_prefix = null
+      name = null
+      next_hop_ip = null
+      next_hop_type = null
+  }
   description = "Routes for the route table"
 }

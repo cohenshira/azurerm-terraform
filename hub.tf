@@ -16,32 +16,19 @@ locals {
       address_prefixes = ["10.0.2.0/24"]
     }
   }
-  firewall_name                       = "shira-hub-firewall-tf"
+  firewall_name                       = "shika-hub-firewall-tf"
   firewall_policy_name                = "shira-hub-firewall-policy-tf"
   firewall_rule_collection_group_name = "shira-firewall-collenction-group-tf"
-  priority                            = 100
+  network_priority                    = 100
+  application_priority                = 102
+  nat_priority                        = 103
   app_rule_collections                = {}
-  network_rule_collections = {
-    collection1 = {
-      name     = "network_rule_collection1"
-      priority = 102
-      action   = "Allow"
-      rules = {
-        allowssh = {
-          name                  = "allowssh"
-          protocols             = ["TCP", "UDP"]
-          source_addresses      = ["*"]
-          destination_addresses = ["*"]
-          destination_ports     = ["22"]
-        }
-      }
-    }
-  }
-  hub_gateway_name         = "shira-hub-gw-tf"
-  hub_client_address_space = ["172.20.0.0/24"]
-  auth_type                = ["AAD"]
-  hub_hostname             = "shira-hub-vm-tf"
-  hub_vm_size              = "Standard_B1s"
+  nat_rule_collections                = {}
+  hub_gateway_name                    = "shira-hub-gw-tf"
+  hub_client_address_space            = ["172.20.0.0/24"]
+  auth_type                           = ["AAD"]
+  hub_hostname                        = "shira-hub-vm-tf"
+  hub_vm_size                         = "Standard_B1s"
   hub_os_disk = {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
@@ -57,20 +44,9 @@ locals {
   default_hub_route_table_name = "shira-default-hub-route-table-tf"
   default_hub_route_name       = "ToHub"
   hub_peer_name                = "HubToSpoke"
-  hub_routes = {
-    tospoke = {
-      route_name     = "ToSpoke"
-      address_prefix = local.spoke_vnet_address_space[0]
-      next_hop_type  = "VirtualAppliance"
-    }
-  }
-  hub_use_remote_gateways = false
-  hub_gateway_transit     = true
-
+  hub_use_remote_gateways      = false
+  hub_gateway_transit          = true
 }
-
-
-
 
 
 resource "azurerm_resource_group" "rg" {
@@ -78,14 +54,15 @@ resource "azurerm_resource_group" "rg" {
   location = var.location
 }
 
+
 module "hub_vnet" {
   source = "./modules/Vnet"
 
-  location                  = azurerm_resource_group.rg.location
-  resource_group_name       = azurerm_resource_group.rg.name
-  vnet_name                 = local.hub_vnet_name
-  vnet_address_space        = local.hub_vnet_address_space
-  subnets                   = local.hub_subnets
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  vnet_name           = local.hub_vnet_name
+  vnet_address_space  = local.hub_vnet_address_space
+  subnets             = local.hub_subnets
   depends_on = [
     azurerm_resource_group.rg
   ]
@@ -99,9 +76,12 @@ module "hub_firewall" {
   firewall_policy_name                = local.firewall_policy_name
   firewall_rule_collection_group_name = local.firewall_rule_collection_group_name
   subnet_id                           = lookup(module.hub_vnet.created_subnets, "AzureFirewallSubnet")
-  priority                            = local.priority
+  network_priority                    = local.network_priority
+  application_priority                = local.application_priority
+  nat_priority                        = local.nat_priority
   app_rule_collections                = local.app_rule_collections
-  network_rule_collections            = local.network_rule_collections
+  network_rule_collections            = jsondecode(file("./jsons/network_rule_collection.json"))
+  nat_rule_collections                = local.nat_rule_collections
   depends_on = [
     module.hub_vnet.vnet, module.hub_vnet.subnet
   ]
@@ -129,11 +109,10 @@ module "to_spoke_route_table" {
   route_table_name    = local.hub_route_table_name
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
-  routes              = local.hub_routes
-  next_hop_ip         = module.hub_firewall.firewall_private_ip
+  routes              = jsondecode(templatefile("./jsons/hub_routes.json", { address_prefix = local.spoke_vnet_address_space[0], next_hop_ip = module.hub_firewall.firewall_private_ip }))
   subnet_ids          = [lookup(module.hub_vnet.created_subnets, "GatewaySubnet")]
   depends_on = [
-    module.spoke_vnet, module.hub_vnet, module.hub_firewall.object
+    module.spoke_vnet, module.hub_vnet, module.hub_firewall
   ]
 }
 
