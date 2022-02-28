@@ -24,13 +24,10 @@ variable "routes" {
     name           = string
     address_prefix = string
     next_hop_type  = string
-    next_hop_ip    = string
+    next_hop_ip    = optional(string)
   }))
   default = {
-      address_prefix = null
-      name = null
       next_hop_ip = null
-      next_hop_type = null
   }
   description = "Routes for the route table"
 }

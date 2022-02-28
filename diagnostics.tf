@@ -12,6 +12,7 @@ resource "azurerm_log_analytics_workspace" "log_analytics_workspace" {
   retention_in_days   = local.retention_days
 }
 
+
 module "hub_vnet_diagnostic_setting" {
   source                     = "./modules/DiagnosticSettings"
   diagnostic_setting_name    = "${local.hub_vnet_name}-diagnostic-settings"
@@ -53,3 +54,4 @@ module "spoke_vm_diagnostic_setting" {
   target_resource_id         = module.spoke_virtual_machine.id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.log_analytics_workspace.id
 }
+

@@ -1,4 +1,3 @@
-
 locals {
   spoke_resource_group_name = "shira-spoke-rg-tf"
   location                  = "westeurope"
@@ -10,7 +9,7 @@ locals {
       address_prefixes = ["10.1.1.0/24"]
     }
   }
-  spoke_nsg_name = "shira-spoke-nsg-tf"
+  spoke_nsg_name           = "shira-spoke-nsg-tf"
   storage_account_name     = "shiraspokesatf"
   account_tier             = "Standard"
   account_replication_type = "LRS"
@@ -73,10 +72,10 @@ module "to_hub_route_table" {
   route_table_name    = local.spoke_route_table_name
   location            = azurerm_resource_group.spoke_rg.location
   resource_group_name = azurerm_resource_group.spoke_rg.name
-  routes              = jsondecode(templatefile("./jsons/spoke_routes.json", {to_hub_address_prefix = local.hub_vnet_address_space[0], to_gateway_address_prefix = local.hub_client_address_space[0], next_hop_ip = module.hub_firewall.firewall_private_ip}))
+  routes              = jsondecode(templatefile("./jsons/spoke_routes.json", { to_hub_address_prefix = local.hub_vnet_address_space[0], to_gateway_address_prefix = local.hub_client_address_space[0], next_hop_ip = module.hub_firewall.firewall_private_ip }))
   subnet_ids          = [lookup(module.spoke_vnet.created_subnets, local.spoke_subnets.default_subnet.name)]
   depends_on = [
-    module.hub_vnet, module.hub_firewall.object, module.spoke_vnet.created_subnets
+    module.hub_vnet, module.spoke_vnet.created_subnets, module.hub_firewall
   ]
 }
 

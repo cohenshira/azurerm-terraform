@@ -14,11 +14,12 @@ module "firewall_policy" {
   firewall_policy_name                = var.firewall_policy_name
   firewall_rule_collection_group_name = var.firewall_rule_collection_group_name
   network_priority                    = var.network_priority
-  application_priority = var.application_priority
-  nat_priority = var.nat_priority
+  application_priority                = var.application_priority
+  nat_priority                        = var.nat_priority
   app_rule_collections                = var.app_rule_collections
   network_rule_collections            = var.network_rule_collections
   nat_rule_collections                = var.nat_rule_collections
+
 }
 
 
