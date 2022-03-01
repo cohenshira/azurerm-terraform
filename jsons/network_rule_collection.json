@@ -1,0 +1,17 @@
+{
+"collection1": {
+    "name": "network_rule_collection1",
+    "priority": 102,
+    "action": "Allow",
+    "rules": {
+    "allowssh": {
+        "name": "allowssh",
+        "protocols": ["TCP", "UDP"],
+        "source_addresses": ["*"],
+        "destination_addresses": ["*"],
+        "destination_ports": ["22"]
+        }
+    }
+
+    }
+}
