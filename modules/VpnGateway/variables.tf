@@ -1,93 +1,95 @@
 variable "gateway_name" {
   type        = string
-  description = "Name for the Virtual Network Gateway"
+  description = "(Required)Name for the Virtual Network Gateway"
 }
 
 variable "location" {
   type        = string
-  description = "Location for the created resouorces"
+  description = "(Required)Location for the created resouorces"
 }
 
 variable "resource_group_name" {
   type        = string
-  description = "Resource Group"
+  description = "(Required)Resource group name for the created resources"
 }
 
 variable "ip_allocation" {
   type        = string
-  description = "IP Allocation - Static or Dynamic"
+  description = "(Optional)IP Allocation type - Static or Dynamic"
   default     = "Dynamic"
 }
 
 variable "gateway_type" {
   type        = string
-  description = "Gateway Type"
+  description = "(Optional)Gateway Type"
   default     = "Vpn"
 }
 
 variable "vpn_type" {
   type        = string
-  description = "Vpn Type"
+  description = "(Optional)Vpn Type"
   default     = "RouteBased"
 }
 
 variable "active_active" {
   type    = bool
+  description = "(Optional)if value equals true, an active-active vpn gateway will be created. Else, an active-standby vpn gateway will be created"
   default = false
 }
 
 variable "enable_bgp" {
   type    = bool
+  description = "(Optional)Enabling border gateway protocol"
   default = false
 }
 
 variable "generation" {
   type        = string
-  description = "Virtual network Gateway generation"
+  description = "(Optional)Virtual network Gateway generation"
   default     = "Generation1"
 }
 
 variable "gateway_sku" {
   type        = string
-  description = "Gateway SKU"
+  description = "(Optional)Gateway SKU"
   default     = "Standard"
 }
 
 variable "subnet_id" {
   type        = string
-  description = "Gateway Subnet ID"
+  description = "(Required)Gateway Subnet ID"
 }
 
 variable "client_address_space" {
   type        = list(string)
-  description = "Addres space for the VPN client"
+  description = "(Required)Addres space for the VPN client"
 }
 
 variable "auth_type" {
   type        = list(string)
-  description = "Authentication types"
+  description = "(Optional) Authentication types to the gateway"
   default     = ["AAD"]
 }
 
 variable "client_protocols" {
   type        = list(string)
-  description = "VPN client protocols"
+  description = "(Optional)VPN client protocols"
   default     = ["OpenVPN"]
 }
 
 variable "tenant_id" {
   type        = string
-  description = "Tenant ID"
+  description = "(Required)ID of the azure tenant"
 }
 
 variable "audience" {
   type        = string
-  description = "The client id of the Azure VPN application"
+  description = "(Required)The client id of the Azure VPN application"
 }
 
 variable "issuer" {
   type        = string
-  description = "The STS url for the tenant"
+  description = "(Required)The STS url for the tenant"
 }
 
 

@@ -51,7 +51,6 @@ module "spoke_vnet" {
   depends_on = [
     azurerm_resource_group.spoke_rg
   ]
-
 }
 
 module "spoke_nsg" {

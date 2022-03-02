@@ -1,36 +1,36 @@
 variable "location" {
   type        = string
-  description = "The Location of the created resources"
+  description = "(Required)The Location of the created resources"
 }
 
 variable "resource_group_name" {
   type        = string
-  description = "Resource group name"
+  description = "(Required)Resource group name for the created resources"
 }
 
 variable "firewall_policy_name" {
   type        = string
-  description = "Name for the firewall policy"
+  description = "(Required)Name for the firewall policy"
 }
 
 variable "firewall_rule_collection_group_name" {
   type        = string
-  description = "Name for the firewall collection group"
+  description = "(Required)Name for the firewall collection group"
 }
 
 variable "network_priority" {
   type        = number
-  description = "Priority number for the network collection group"
+  description = "(Required)Priority number for the network collection group"
 }
 
 variable "application_priority" {
   type        = number
-  description = "Priority number for the application collection group"
+  description = "(Required)Priority number for the application collection group"
 }
 
 variable "nat_priority" {
   type        = number
-  description = "Priority number for the NAT collection group"
+  description = "(Required)Priority number for the NAT collection group"
 }
 
 variable "app_rule_collections" {
@@ -68,7 +68,7 @@ variable "app_rule_collections" {
       }
     }
   }
-  description = "Application rule collections and rules"
+  description = "(Required)Application rule collections and rules"
 }
 
 variable "network_rule_collections" {
@@ -84,7 +84,7 @@ variable "network_rule_collections" {
       destination_ports     = list(string)
     }))
   }))
-  description = "Network rule collections and rules"
+  description = "(Required)Network rule collections and rules"
   default = {
     "key" = {
       action   = null
@@ -137,6 +137,6 @@ variable "nat_rule_collections" {
       }
     }
   }
-  description = "NAT rule collection and rules"
+  description = "(Required)NAT rule collection and rules"
 }
 

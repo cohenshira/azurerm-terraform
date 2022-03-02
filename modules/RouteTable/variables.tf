@@ -1,22 +1,23 @@
 variable "resource_group_name" {
   type        = string
-  description = "Resource group where the resources will be created"
+  description = "(Required)Resource group where the resources will be created"
 }
 
 variable "location" {
   type        = string
-  description = "Location for the created resources"
+  description = "(Optional)Location for the created resources"
+  default     = "westeurope"
 }
 
 variable "route_table_name" {
   type        = string
-  description = "Route Table Name"
+  description = "(Required)Route Table Name"
 }
 
 
 variable "subnet_ids" {
   type        = list(string)
-  description = "The ID of the associated subnets"
+  description = "(Required)The ID of the associated subnets"
 }
 
 variable "routes" {
@@ -27,7 +28,7 @@ variable "routes" {
     next_hop_ip    = optional(string)
   }))
   default = {
-      next_hop_ip = null
+    next_hop_ip = null
   }
-  description = "Routes for the route table"
+  description = "(Required)Routes for the route table"
 }

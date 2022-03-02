@@ -1,15 +1,17 @@
 variable "location" {
-  type = string
+  type        = string
+  description = "(Optional)Location where the resources will be created"
+  default     = "westeurope"
 }
 
 variable "resource_group_name" {
   type        = string
-  description = "Resource Group Name"
+  description = "(Required)Resource Group Name for the created resources"
 }
 
 variable "nsg_name" {
   type        = string
-  description = "Name for the Network security group"
+  description = "(Required)Name for the Network security group"
 }
 
 variable "nsg_rules" {
@@ -45,10 +47,10 @@ variable "nsg_rules" {
       source_port_ranges           = []
     }
   }
-  description = "Rules of the network security group"
+  description = "(Required)Rules of the network security group"
 }
 
 variable "subnet_ids" {
   type        = list(string)
-  description = "ID of the subnet we want to connect the network security group"
+  description = "(Required)ID of the subnet we want to connect the network security group"
 }
