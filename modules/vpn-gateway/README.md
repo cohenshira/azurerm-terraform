@@ -1,24 +1,11 @@
-<!-- BEGIN_TF_DOCS -->
-## Requirements
 
-No requirements.
-
-## Providers
-
-| Name | Version |
-|------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | n/a |
-
-## Modules
-
-No modules.
 
 ## Resources
 
 | Name | Type |
 |------|------|
 | [azurerm_public_ip.pip](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/public_ip) | resource |
-| [azurerm_virtual_network_gateway.gw](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network_gateway) | resource |
+| [azurerm_virtual_network_gateway.gateway](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network_gateway) | resource |
 
 ## Inputs
 
@@ -49,4 +36,20 @@ No modules.
 | <a name="output_id"></a> [id](#output\_id) | n/a |
 | <a name="output_name"></a> [name](#output\_name) | n/a |
 | <a name="output_object"></a> [object](#output\_object) | n/a |
-<!-- END_TF_DOCS -->
+
+## Example
+
+```hcl
+module "vpn-gateway" {
+  source               = "./modules/vpn-gateway"
+  location             = "westeurope"
+  resource_group_name  = "example-resource-group"
+  gateway_name         = "example-virtual-network-gateway"
+  subnet_id            = "/subscriptions/xxx/resourceGroups/example-resource-group/providers/Microsoft.Network/virtualNetworks/example-virtual-network/subnets/GatewaySubnet"
+  client_address_space = "[172.2.0.0/16]"
+  auth_type            = ["AAD"]
+  tenant_id            = "https://login.microsoftonline.com/xxx"
+  audience             = "n7h67gtbybt76h7666rt5676ttt"
+  issuer               = "https://sts.windows.net/xxx/"
+}
+```

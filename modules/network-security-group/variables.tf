@@ -9,12 +9,12 @@ variable "resource_group_name" {
   description = "(Required)Resource Group Name for the created resources"
 }
 
-variable "nsg_name" {
+variable "network_security_group_name" {
   type        = string
   description = "(Required)Name for the Network security group"
 }
 
-variable "nsg_rules" {
+variable "network_security_group_rules" {
   type = map(object({
     name                         = string
     priority                     = number

@@ -5,7 +5,7 @@ resource "azurerm_public_ip" "pip" {
   allocation_method   = var.ip_allocation
 }
 
-resource "azurerm_virtual_network_gateway" "gw" {
+resource "azurerm_virtual_network_gateway" "gateway" {
   name                = var.gateway_name
   location            = var.location
   resource_group_name = var.resource_group_name

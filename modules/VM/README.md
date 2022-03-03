@@ -1,17 +1,4 @@
-<!-- BEGIN_TF_DOCS -->
-## Requirements
 
-No requirements.
-
-## Providers
-
-| Name | Version |
-|------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | n/a |
-
-## Modules
-
-No modules.
 
 ## Resources
 
@@ -51,4 +38,26 @@ No modules.
 | <a name="output_id"></a> [id](#output\_id) | Virtual machine ID |
 | <a name="output_name"></a> [name](#output\_name) | Virtual machine name |
 | <a name="output_object"></a> [object](#output\_object) | Virtual machine object |
-<!-- END_TF_DOCS -->
+
+## Example
+
+```hcl
+module "virtual_machine" {
+  source               = "./modules/vm"
+  location             = "westeurope"
+  resource_group_name  = "example-resource-group"
+  is_linux             = true
+  subnet_id            = "/subscriptions/xxx/resourceGroups/example-resource-group/providers/Microsoft.Network/virtualNetworks/example-virtual-network/subnets/example-subnet"
+  hostname             = "example-virtual-machine"
+  vm_size              = "Standard_B1s"
+  username             = "adminuser"
+  password             = "password"
+  caching              = "ReadWrite"
+  storage_account_type = "Standard_LRS"
+  publisher            = "RedHat"
+  offer                = "RHEL"
+  image_sku            = "82gen2"
+  image_version        = "latest"
+
+}
+```

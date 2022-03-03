@@ -1,5 +1,3 @@
-# Final
-<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
@@ -16,31 +14,31 @@
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_hub_firewall"></a> [hub\_firewall](#module\_hub\_firewall) | ./modules/Firewall | n/a |
-| <a name="module_hub_firewall_diagnostic_setting"></a> [hub\_firewall\_diagnostic\_setting](#module\_hub\_firewall\_diagnostic\_setting) | ./modules/DiagnosticSettings | n/a |
-| <a name="module_hub_spoke_peering"></a> [hub\_spoke\_peering](#module\_hub\_spoke\_peering) | ./modules/TwoWayPeering | n/a |
-| <a name="module_hub_virtual_machine"></a> [hub\_virtual\_machine](#module\_hub\_virtual\_machine) | ./modules/VM | n/a |
-| <a name="module_hub_vm_diagnostic_setting"></a> [hub\_vm\_diagnostic\_setting](#module\_hub\_vm\_diagnostic\_setting) | ./modules/DiagnosticSettings | n/a |
-| <a name="module_hub_vnet"></a> [hub\_vnet](#module\_hub\_vnet) | ./modules/Vnet | n/a |
-| <a name="module_hub_vnet_diagnostic_setting"></a> [hub\_vnet\_diagnostic\_setting](#module\_hub\_vnet\_diagnostic\_setting) | ./modules/DiagnosticSettings | n/a |
-| <a name="module_hub_vnet_gateway"></a> [hub\_vnet\_gateway](#module\_hub\_vnet\_gateway) | ./modules/VpnGateway | n/a |
-| <a name="module_spoke_nsg"></a> [spoke\_nsg](#module\_spoke\_nsg) | ./modules/NSG | n/a |
-| <a name="module_spoke_nsg_diagnostic_setting"></a> [spoke\_nsg\_diagnostic\_setting](#module\_spoke\_nsg\_diagnostic\_setting) | ./modules/DiagnosticSettings | n/a |
-| <a name="module_spoke_virtual_machine"></a> [spoke\_virtual\_machine](#module\_spoke\_virtual\_machine) | ./modules/VM | n/a |
-| <a name="module_spoke_vm_diagnostic_setting"></a> [spoke\_vm\_diagnostic\_setting](#module\_spoke\_vm\_diagnostic\_setting) | ./modules/DiagnosticSettings | n/a |
-| <a name="module_spoke_vnet"></a> [spoke\_vnet](#module\_spoke\_vnet) | ./modules/Vnet | n/a |
-| <a name="module_spoke_vnet_diagnostic_setting"></a> [spoke\_vnet\_diagnostic\_setting](#module\_spoke\_vnet\_diagnostic\_setting) | ./modules/DiagnosticSettings | n/a |
-| <a name="module_storage_account"></a> [storage\_account](#module\_storage\_account) | ./modules/StorageAccount | n/a |
-| <a name="module_to_hub_route_table"></a> [to\_hub\_route\_table](#module\_to\_hub\_route\_table) | ./modules/RouteTable | n/a |
-| <a name="module_to_spoke_route_table"></a> [to\_spoke\_route\_table](#module\_to\_spoke\_route\_table) | ./modules/RouteTable | n/a |
+| <a name="module_hub_firewall"></a> [hub\_firewall](#module\_hub\_firewall) | ./modules/firewall | n/a |
+| <a name="module_hub_firewall_diagnostic_setting"></a> [hub\_firewall\_diagnostic\_setting](#module\_hub\_firewall\_diagnostic\_setting) | ./modules/diagnostic-settings | n/a |
+| <a name="module_hub_spoke_peering"></a> [hub\_spoke\_peering](#module\_hub\_spoke\_peering) | ./modules/two-way-peering | n/a |
+| <a name="module_hub_virtual_machine"></a> [hub\_virtual\_machine](#module\_hub\_virtual\_machine) | ./modules/virtual-machine | n/a |
+| <a name="module_hub_vm_diagnostic_setting"></a> [hub\_vm\_diagnostic\_setting](#module\_hub\_vm\_diagnostic\_setting) | ./modules/diagnostic-settings | n/a |
+| <a name="module_hub_vnet"></a> [hub\_vnet](#module\_hub\_vnet) | ./modules/virtual-network | n/a |
+| <a name="module_hub_vnet_diagnostic_setting"></a> [hub\_vnet\_diagnostic\_setting](#module\_hub\_vnet\_diagnostic\_setting) | ./modules/diagnostic-settings | n/a |
+| <a name="module_hub_vnet_gateway"></a> [hub\_vnet\_gateway](#module\_hub\_vnet\_gateway) | ./modules/vpn-gateway | n/a |
+| <a name="module_spoke_network_security_group"></a> [spoke\_network\_security\_group](#module\_spoke\_network\_security\_group) | ./modules/network-security-group | n/a |
+| <a name="module_spoke_nsg_diagnostic_setting"></a> [spoke\_nsg\_diagnostic\_setting](#module\_spoke\_nsg\_diagnostic\_setting) | ./modules/diagnostic-settings | n/a |
+| <a name="module_spoke_virtual_machine"></a> [spoke\_virtual\_machine](#module\_spoke\_virtual\_machine) | ./modules/vm | n/a |
+| <a name="module_spoke_vm_diagnostic_setting"></a> [spoke\_vm\_diagnostic\_setting](#module\_spoke\_vm\_diagnostic\_setting) | ./modules/diagnostic-settings | n/a |
+| <a name="module_spoke_vnet"></a> [spoke\_vnet](#module\_spoke\_vnet) | ./modules/virtual-network | n/a |
+| <a name="module_spoke_vnet_diagnostic_setting"></a> [spoke\_vnet\_diagnostic\_setting](#module\_spoke\_vnet\_diagnostic\_setting) | ./modules/diagnostic-settings | n/a |
+| <a name="module_storage_account"></a> [storage\_account](#module\_storage\_account) | ./modules/storage-account | n/a |
+| <a name="module_to_hub_route_table"></a> [to\_hub\_route\_table](#module\_to\_hub\_route\_table) | ./modules/route-table | n/a |
+| <a name="module_to_spoke_route_table"></a> [to\_spoke\_route\_table](#module\_to\_spoke\_route\_table) | ./modules/route-table | n/a |
 
 ## Resources
 
 | Name | Type |
 |------|------|
 | [azurerm_log_analytics_workspace.log_analytics_workspace](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/log_analytics_workspace) | resource |
-| [azurerm_resource_group.rg](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) | resource |
-| [azurerm_resource_group.spoke_rg](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) | resource |
+| [azurerm_resource_group.hub_resource_group](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) | resource |
+| [azurerm_resource_group.spoke_resource_group](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) | resource |
 
 ## Inputs
 
@@ -56,4 +54,3 @@
 ## Outputs
 
 No outputs.
-<!-- END_TF_DOCS -->

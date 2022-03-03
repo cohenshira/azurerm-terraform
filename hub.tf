@@ -49,29 +49,29 @@ locals {
 }
 
 
-resource "azurerm_resource_group" "rg" {
+resource "azurerm_resource_group" "hub_resource_group" {
   name     = local.hub_resource_group_name
   location = var.location
 }
 
 
 module "hub_vnet" {
-  source = "./modules/Vnet"
+  source = "./modules/virtual-network"
 
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.hub_resource_group.location
+  resource_group_name = azurerm_resource_group.hub_resource_group.name
   vnet_name           = local.hub_vnet_name
   vnet_address_space  = local.hub_vnet_address_space
   subnets             = local.hub_subnets
   depends_on = [
-    azurerm_resource_group.rg
+    azurerm_resource_group.hub_resource_group
   ]
 }
 
 module "hub_firewall" {
-  source                              = "./modules/Firewall"
-  location                            = azurerm_resource_group.rg.location
-  resource_group_name                 = azurerm_resource_group.rg.name
+  source                              = "./modules/firewall"
+  location                            = azurerm_resource_group.hub_resource_group.location
+  resource_group_name                 = azurerm_resource_group.hub_resource_group.name
   firewall_name                       = local.firewall_name
   firewall_policy_name                = local.firewall_policy_name
   firewall_rule_collection_group_name = local.firewall_rule_collection_group_name
@@ -88,9 +88,9 @@ module "hub_firewall" {
 }
 
 module "hub_vnet_gateway" {
-  source               = "./modules/VpnGateway"
-  location             = azurerm_resource_group.rg.location
-  resource_group_name  = azurerm_resource_group.rg.name
+  source               = "./modules/vpn-gateway"
+  location             = azurerm_resource_group.hub_resource_group.location
+  resource_group_name  = azurerm_resource_group.hub_resource_group.name
   gateway_name         = local.hub_gateway_name
   subnet_id            = lookup(module.hub_vnet.created_subnets, "GatewaySubnet")
   client_address_space = local.hub_client_address_space
@@ -105,10 +105,10 @@ module "hub_vnet_gateway" {
 }
 
 module "to_spoke_route_table" {
-  source              = "./modules/RouteTable"
+  source              = "./modules/route-table"
   route_table_name    = local.hub_route_table_name
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.hub_resource_group.location
+  resource_group_name = azurerm_resource_group.hub_resource_group.name
   routes              = jsondecode(templatefile("./jsons/hub_routes.json", { address_prefix = local.spoke_vnet_address_space[0], next_hop_ip = module.hub_firewall.firewall_private_ip }))
   subnet_ids          = [lookup(module.hub_vnet.created_subnets, "GatewaySubnet")]
   depends_on = [
@@ -119,9 +119,9 @@ module "to_spoke_route_table" {
 
 
 module "hub_virtual_machine" {
-  source               = "./modules/VM"
-  location             = azurerm_resource_group.rg.location
-  resource_group_name  = azurerm_resource_group.rg.name
+  source               = "./modules/vm"
+  location             = azurerm_resource_group.hub_resource_group.location
+  resource_group_name  = azurerm_resource_group.hub_resource_group.name
   is_linux             = local.is_linux
   subnet_id            = lookup(module.hub_vnet.created_subnets, local.hub_subnets.default_subnet.name)
   hostname             = local.hub_hostname

@@ -9,17 +9,17 @@ locals {
       address_prefixes = ["10.1.1.0/24"]
     }
   }
-  spoke_nsg_name           = "shira-spoke-nsg-tf"
-  storage_account_name     = "shiraspokesatf"
-  account_tier             = "Standard"
-  account_replication_type = "LRS"
-  is_manual_connection     = false
-  virtual_link_name        = "shira-private-endpoint-virual-link"
-  spoke_route_table_name   = "shira-spoke-route-table-tf"
-  spoke_peer_name          = "SpokeToHub"
-  is_linux                 = true
-  spoke_hostname           = "shira-spoke-vm-tf"
-  spoke_vm_size            = "Standard_B1s"
+  spoke_network_security_group_name = "shira-spoke-network-security-group-tf"
+  storage_account_name              = "shiraspokesatf"
+  account_tier                      = "Standard"
+  account_replication_type          = "LRS"
+  is_manual_connection              = false
+  virtual_link_name                 = "shira-private-endpoint-virual-link"
+  spoke_route_table_name            = "shira-spoke-route-table-tf"
+  spoke_peer_name                   = "SpokeToHub"
+  is_linux                          = true
+  spoke_hostname                    = "shira-spoke-vm-tf"
+  spoke_vm_size                     = "Standard_B1s"
   spoke_os_disk = {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
@@ -36,30 +36,30 @@ locals {
 }
 
 
-resource "azurerm_resource_group" "spoke_rg" {
+resource "azurerm_resource_group" "spoke_resource_group" {
   name     = local.spoke_resource_group_name
   location = local.location
 }
 
 module "spoke_vnet" {
-  source              = "./modules/Vnet"
-  location            = azurerm_resource_group.spoke_rg.location
-  resource_group_name = azurerm_resource_group.spoke_rg.name
+  source              = "./modules/virtual-network"
+  location            = azurerm_resource_group.spoke_resource_group.location
+  resource_group_name = azurerm_resource_group.spoke_resource_group.name
   vnet_name           = local.spoke_vnet_name
   vnet_address_space  = local.spoke_vnet_address_space
   subnets             = local.spoke_subnets
   depends_on = [
-    azurerm_resource_group.spoke_rg
+    azurerm_resource_group.spoke_resource_group
   ]
 }
 
-module "spoke_nsg" {
-  source              = "./modules/NSG"
-  location            = azurerm_resource_group.spoke_rg.location
-  resource_group_name = azurerm_resource_group.spoke_rg.name
-  nsg_name            = local.spoke_nsg_name
-  nsg_rules           = jsondecode(file("./jsons/nsg_rules.json"))
-  subnet_ids          = module.spoke_vnet.subnet_ids_list
+module "spoke_network_security_group" {
+  source                       = "./modules/network-security-group"
+  location                     = azurerm_resource_group.spoke_resource_group.location
+  resource_group_name          = azurerm_resource_group.spoke_resource_group.name
+  network_security_group_name  = local.spoke_network_security_group_name
+  network_security_group_rules = jsondecode(file("./jsons/network_security_group_rules.json"))
+  subnet_ids                   = module.spoke_vnet.subnet_ids_list
 
   depends_on = [
     module.spoke_vnet.subnets, module.hub_firewall.object
@@ -67,10 +67,10 @@ module "spoke_nsg" {
 }
 
 module "to_hub_route_table" {
-  source              = "./modules/RouteTable"
+  source              = "./modules/route-table"
   route_table_name    = local.spoke_route_table_name
-  location            = azurerm_resource_group.spoke_rg.location
-  resource_group_name = azurerm_resource_group.spoke_rg.name
+  location            = azurerm_resource_group.spoke_resource_group.location
+  resource_group_name = azurerm_resource_group.spoke_resource_group.name
   routes              = jsondecode(templatefile("./jsons/spoke_routes.json", { to_hub_address_prefix = local.hub_vnet_address_space[0], to_gateway_address_prefix = local.hub_client_address_space[0], next_hop_ip = module.hub_firewall.firewall_private_ip }))
   subnet_ids          = [lookup(module.spoke_vnet.created_subnets, local.spoke_subnets.default_subnet.name)]
   depends_on = [
@@ -79,10 +79,10 @@ module "to_hub_route_table" {
 }
 
 module "storage_account" {
-  source                   = "./modules/StorageAccount"
+  source                   = "./modules/storage-account"
   storage_account_name     = local.storage_account_name
-  resource_group_name      = azurerm_resource_group.spoke_rg.name
-  location                 = azurerm_resource_group.spoke_rg.location
+  resource_group_name      = azurerm_resource_group.spoke_resource_group.name
+  location                 = azurerm_resource_group.spoke_resource_group.location
   account_tier             = local.account_tier
   account_replication_type = local.account_replication_type
   is_manual_connection     = local.is_manual_connection
@@ -93,9 +93,9 @@ module "storage_account" {
 }
 
 module "spoke_virtual_machine" {
-  source               = "./modules/VM"
-  location             = azurerm_resource_group.spoke_rg.location
-  resource_group_name  = azurerm_resource_group.spoke_rg.name
+  source               = "./modules/vm"
+  location             = azurerm_resource_group.spoke_resource_group.location
+  resource_group_name  = azurerm_resource_group.spoke_resource_group.name
   is_linux             = local.is_linux
   subnet_id            = lookup(module.spoke_vnet.created_subnets, local.spoke_subnets.default_subnet.name)
   hostname             = local.spoke_hostname
@@ -116,9 +116,9 @@ module "spoke_virtual_machine" {
 
 
 module "hub_spoke_peering" {
-  source                = "./modules/TwoWayPeering"
-  resource_group_name_1 = azurerm_resource_group.rg.name
-  resource_group_name_2 = azurerm_resource_group.spoke_rg.name
+  source                = "./modules/two-way-peering"
+  resource_group_name_1 = azurerm_resource_group.hub_resource_group.name
+  resource_group_name_2 = azurerm_resource_group.spoke_resource_group.name
   peer_name_1           = local.hub_peer_name
   peer_name_2           = local.spoke_peer_name
   vnet_name_1           = module.hub_vnet.name

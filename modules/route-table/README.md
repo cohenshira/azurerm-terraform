@@ -1,17 +1,4 @@
-<!-- BEGIN_TF_DOCS -->
-## Requirements
 
-No requirements.
-
-## Providers
-
-| Name | Version |
-|------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | n/a |
-
-## Modules
-
-No modules.
 
 ## Resources
 
@@ -37,4 +24,21 @@ No modules.
 | <a name="output_id"></a> [id](#output\_id) | Route Table ID |
 | <a name="output_name"></a> [name](#output\_name) | Route Table name |
 | <a name="output_object"></a> [object](#output\_object) | Route Table Object |
-<!-- END_TF_DOCS -->
+
+## Example
+
+```hcl
+module "route-table" {
+  source              = "./modules/route-table"
+  route_table_name    = "example-route-table"
+  location            = "westeurope"
+  resource_group_name = "example-resource-group"
+  routes = {
+    to_internet = {
+      name           = "ToInternet",
+      address_prefix = ""
+    }
+  }
+  subnet_ids = ["/subscriptions/xxx/resourceGroups/example-resource-group/providers/Microsoft.Network/virtualNetworks/example-virtual-network/subnets/example-subnet"]
+}
+```

@@ -1,19 +1,4 @@
-<!-- BEGIN_TF_DOCS -->
-## Requirements
 
-No requirements.
-
-## Providers
-
-| Name | Version |
-|------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | n/a |
-
-## Modules
-
-| Name | Source | Version |
-|------|--------|---------|
-| <a name="module_firewall_policy"></a> [firewall\_policy](#module\_firewall\_policy) | ./modules/FirewallPolicy | n/a |
 
 ## Resources
 
@@ -21,6 +6,12 @@ No requirements.
 |------|------|
 | [azurerm_firewall.firewall](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/firewall) | resource |
 | [azurerm_public_ip.pip](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/public_ip) | resource |
+
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_firewall_policy"></a> [firewall\_policy](#module\_firewall\_policy) | ./modules/FirewallPolicy | n/a |
 
 ## Inputs
 
@@ -50,4 +41,34 @@ No requirements.
 | <a name="output_id"></a> [id](#output\_id) | Firewall ID |
 | <a name="output_name"></a> [name](#output\_name) | Firewall name |
 | <a name="output_object"></a> [object](#output\_object) | Firewall object |
-<!-- END_TF_DOCS -->
+
+## Example
+
+```hcl
+module "firewall" {
+  source                              = "./modules/firewall"
+  location                            = "westeurope"
+  resource_group_name                 = "example-resource-group"
+  firewall_name                       = "example-firewall-name"
+  firewall_policy_name                = "example-firewall-policy"
+  firewall_rule_collection_group_name = "example-rule-collection-group"
+  subnet_id                           = "/subscriptions/xxx/resourceGroups/example-resource-group/providers/Microsoft.Network/virtualNetworks/example-virtual-network/subnets/AzureFirewallSubnet"
+  network_priority                    = 101
+  application_priority                = 102
+  nat_priority                        = 103
+  app_rule_collections                = {}
+  network_rule_collections = {
+    name     = "network_rule_collection1"
+    priority = 105
+    action   = "Deny"
+    rule = {
+      name                  = "network_rule_collection1_rule1"
+      protocols             = ["TCP", "UDP"]
+      source_addresses      = ["10.0.0.1"]
+      destination_addresses = ["192.168.1.1", "192.168.1.2"]
+      destination_ports     = ["80", "1000-2000"]
+    }
+  }
+  nat_rule_collections = {}
+}
+```

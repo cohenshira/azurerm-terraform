@@ -1,17 +1,4 @@
-<!-- BEGIN_TF_DOCS -->
-## Requirements
 
-No requirements.
-
-## Providers
-
-| Name | Version |
-|------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | n/a |
-
-## Modules
-
-No modules.
 
 ## Resources
 
@@ -41,4 +28,21 @@ No modules.
 | <a name="output_subnet"></a> [subnet](#output\_subnet) | Subnet object |
 | <a name="output_subnet_ids_list"></a> [subnet\_ids\_list](#output\_subnet\_ids\_list) | List of the subnet ids |
 | <a name="output_vnet_address_prefix"></a> [vnet\_address\_prefix](#output\_vnet\_address\_prefix) | Virtual Network address space |
-<!-- END_TF_DOCS -->
+
+## Example
+
+```hcl
+module "virtual_network" {
+  source              = "./modules/virtual-network"
+  location            = "westeurope"
+  resource_group_name = "example-resource-group"
+  vnet_name           = "example-vnet"
+  vnet_address_space  = "10.0.0.0/16"
+  subnets = {
+    example_subnet = {
+      name             = "example-subnet"
+      address_prefixes = ["10.0.0.0/24"]
+    }
+  }
+}
+```
