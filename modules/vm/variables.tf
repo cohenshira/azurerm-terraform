@@ -87,3 +87,17 @@ variable "is_linux" {
   type        = bool
   description = "(Required)If value eauals true, a linux machine will be created.Else, a windows machine will be created"
 }
+
+
+variable "data_disks" {
+  description = "(Optional) map of data disk to add to the virtual machine"
+  type = map(object({
+    name                 = string
+    storage_account_type = string
+    create_option        = string
+    disk_size_gb         = string
+    lun                  = string
+    caching              = string
+  }))
+  default = null
+}

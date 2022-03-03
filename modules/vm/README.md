@@ -5,8 +5,10 @@
 | Name | Type |
 |------|------|
 | [azurerm_linux_virtual_machine.linux_vm](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_virtual_machine) | resource |
+| [azurerm_managed_disk.data_disk](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/managed_disk) | resource |
 | [azurerm_network_interface.vmnic](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_interface) | resource |
 | [azurerm_public_ip.vm_public_ip](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/public_ip) | resource |
+| [azurerm_virtual_machine_data_disk_attachment.data_disk_attachment](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_machine_data_disk_attachment) | resource |
 | [azurerm_windows_virtual_machine.windows_vm](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/windows_virtual_machine) | resource |
 
 ## Inputs
@@ -14,6 +16,7 @@
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_caching"></a> [caching](#input\_caching) | (Required)Caching for the internal OS disk | `string` | n/a | yes |
+| <a name="input_data_disks"></a> [data\_disks](#input\_data\_disks) | (Optional) map of data disk to add to the virtual machine | <pre>map(object({<br>    name                 = string<br>    storage_account_type = string<br>    create_option        = string<br>    disk_size_gb         = string<br>    lun                  = string<br>    caching              = string<br>  }))</pre> | `null` | no |
 | <a name="input_hostname"></a> [hostname](#input\_hostname) | (Required)Name For The Virtual Machine | `string` | n/a | yes |
 | <a name="input_image_sku"></a> [image\_sku](#input\_image\_sku) | (Required) Image SKU for the the image source | `string` | n/a | yes |
 | <a name="input_image_version"></a> [image\_version](#input\_image\_version) | (Optional) Image version | `string` | `"latest"` | no |
@@ -58,6 +61,15 @@ module "virtual_machine" {
   offer                = "RHEL"
   image_sku            = "82gen2"
   image_version        = "latest"
-
+  data_disks = {
+    data_disk_1 = {
+      name                 = "example-vm-data-disk"
+      storage_account_type = "Standard_LRS"
+      create_option        = "Empty"
+      disk_size_gb         = "10"
+      lun                  = "10"
+      caching              = "ReadWrite"
+    }
+  }
 }
 ```

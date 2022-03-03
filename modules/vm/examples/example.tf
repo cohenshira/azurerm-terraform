@@ -14,5 +14,14 @@ module "virtual_machine" {
   offer                = "RHEL"
   image_sku            = "82gen2"
   image_version        = "latest"
-
+  data_disks = {
+    data_disk_1 = {
+      name                 = "example-vm-data-disk"
+      storage_account_type = "Standard_LRS"
+      create_option        = "Empty"
+      disk_size_gb         = "10"
+      lun                  = "10"
+      caching              = "ReadWrite"
+    }
+  }
 }

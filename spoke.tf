@@ -32,6 +32,16 @@ locals {
   }
   spoke_use_remote_gateways = true
   spoke_gateway_transit     = false
+  data_disks = {
+    data_disk_1 = {
+      name                 = "shira-spoke-vm-data-disk"
+      storage_account_type = "Standard_LRS"
+      create_option        = "Empty"
+      disk_size_gb         = "10"
+      lun                  = "10"
+      caching              = "ReadWrite"
+    }
+  }
 
 }
 
@@ -108,6 +118,7 @@ module "spoke_virtual_machine" {
   offer                = local.spoke_source_image_reference.offer
   image_sku            = local.spoke_source_image_reference.sku
   image_version        = local.spoke_source_image_reference.version
+  data_disks           = local.data_disks
 
   depends_on = [
     module.spoke_vnet.object
