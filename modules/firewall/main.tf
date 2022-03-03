@@ -8,7 +8,7 @@ resource "azurerm_public_ip" "pip" {
 
 
 module "firewall_policy" {
-  source                              = "./modules/FirewallPolicy"
+  source                              = "./modules/firewall-policy"
   location                            = var.location
   resource_group_name                 = var.resource_group_name
   firewall_policy_name                = var.firewall_policy_name
