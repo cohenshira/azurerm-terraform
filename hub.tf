@@ -61,6 +61,11 @@ module "hub_vnet" {
 locals {
   firewall_name        = "shira-hub-firewall-tf-final"
   firewall_policy_name = "shira-hub-firewall-policy-tf"
+  network_collection_group_variables = {
+    source_addresses    = local.hub_client_address_space[0],
+    hub_address_space   = local.hub_vnet_address_space[0],
+    spoke_address_space = local.spoke_vnet_address_space[0]
+  }
 }
 
 module "hub_firewall" {
@@ -70,7 +75,7 @@ module "hub_firewall" {
   firewall_policy_name               = local.firewall_policy_name
   location                           = azurerm_resource_group.hub_resource_group.location
   resource_group_name                = azurerm_resource_group.hub_resource_group.name
-  network_rule_collection_groups     = jsondecode(file("./rule_collection_groups/network_rule_collection_groups.json"))
+  network_rule_collection_groups     = jsondecode(templatefile("./rule_collection_groups/network_rule_collection_groups.json", local.network_collection_group_variables))
   application_rule_collection_groups = jsondecode(file("./rule_collection_groups/application_rule_collection_groups.json"))
   nat_rule_collection_groups         = jsondecode(file("./rule_collection_groups/nat_rule_collection_groups.json"))
   subnet_id                          = lookup(module.hub_vnet.created_subnets, "AzureFirewallSubnet")

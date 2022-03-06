@@ -15,10 +15,11 @@
                             "UDP"
                         ],
                         "source_addresses": [
-                            "*"
+                            "${source_addresses}"
                         ],
                         "destination_addresses": [
-                            "*"
+                            "${hub_address_space}",
+                            "${spoke_address_space}"
                         ],
                         "destination_ports": [
                             "22"
