@@ -4,13 +4,15 @@ resource "azurerm_firewall_policy" "firewall_policy" {
   location            = var.location
 }
 
+
 resource "azurerm_firewall_policy_rule_collection_group" "firewall_network_rule_collection_group" {
-  name               = "${var.firewall_rule_collection_group_name}-network"
+  for_each           = var.network_rule_collection_groups
+  name               = each.value.name
   firewall_policy_id = azurerm_firewall_policy.firewall_policy.id
-  priority           = var.network_priority
+  priority           = each.value.priority
 
   dynamic "network_rule_collection" {
-    for_each = var.network_rule_collections
+    for_each = each.value.network_rule_collections
     content {
       name     = network_rule_collection.value.name
       priority = network_rule_collection.value.priority
@@ -30,12 +32,13 @@ resource "azurerm_firewall_policy_rule_collection_group" "firewall_network_rule_
 }
 
 resource "azurerm_firewall_policy_rule_collection_group" "firewall_application_rule_collection_group" {
-  name               = "${var.firewall_rule_collection_group_name}-application"
+  for_each           = var.application_rule_collection_groups
+  name               = each.value.name
+  priority           = each.value.priority
   firewall_policy_id = azurerm_firewall_policy.firewall_policy.id
-  priority           = var.application_priority
 
   dynamic "application_rule_collection" {
-    for_each = var.app_rule_collections
+    for_each = each.value.application_rule_collections
     content {
       name     = application_rule_collection.value.name
       priority = application_rule_collection.value.priority
@@ -51,8 +54,8 @@ resource "azurerm_firewall_policy_rule_collection_group" "firewall_application_r
               port = protocols.value.port
             }
           }
-          source_addresses      = rule.value.source_addresses[*]
-          destination_fqdns     = rule.value.target_fqdns[*]
+          source_addresses  = rule.value.source_addresses[*]
+          destination_fqdns = rule.value.target_fqdns[*]
         }
       }
     }
@@ -60,12 +63,13 @@ resource "azurerm_firewall_policy_rule_collection_group" "firewall_application_r
 }
 
 resource "azurerm_firewall_policy_rule_collection_group" "firewall_nat_rule_collection_group" {
-  name               = "${var.firewall_rule_collection_group_name}-nat"
+  for_each           = var.nat_rule_collection_groups
+  name               = each.value.name
+  priority           = each.value.priority
   firewall_policy_id = azurerm_firewall_policy.firewall_policy.id
-  priority           = var.nat_priority
 
   dynamic "nat_rule_collection" {
-    for_each = var.nat_rule_collections
+    for_each = each.value.nat_rule_collections
     content {
       name     = nat_rule_collection.value.name
       priority = nat_rule_collection.value.priority

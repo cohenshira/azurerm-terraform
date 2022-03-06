@@ -94,3 +94,10 @@ resource "azurerm_virtual_machine_data_disk_attachment" "data_disk_attachment" {
   lun                = each.value.lun
   caching            = each.value.caching
 }
+
+module "virtual_machine_diagnostic_setting" {
+  source                     = "../diagnostic-settings"
+  diagnostic_setting_name    = "${var.hostname}-diagnostic-settings"
+  target_resource_id         = var.is_linux ? azurerm_linux_virtual_machine.linux_vm.0.id : azurerm_windows_virtual_machine.windows_vm.0.id
+  log_analytics_workspace_id = var.log_analytics_workspace_id
+}

@@ -54,3 +54,8 @@ variable "subnet_ids" {
   type        = list(string)
   description = "(Required)ID of the subnet we want to connect the network security group"
 }
+
+variable "log_analytics_workspace_id" {
+  type        = string
+  description = "(Required) ID for the log analytics workspace for the network security group diagnostic setting"
+}

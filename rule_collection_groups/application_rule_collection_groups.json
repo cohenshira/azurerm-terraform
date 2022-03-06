@@ -1,0 +1,7 @@
+{
+    "application_rule_collection_group": {
+        "name": "shira-firewall-application-collection-group",
+        "priority": 102,
+        "application_rule_collections": {}
+    }
+}

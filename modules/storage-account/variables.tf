@@ -55,3 +55,8 @@ variable "subresource_names" {
   description = "(Optional) A list of subresources names which the Private Endpoint is able to connect to"
   default     = ["blob"]
 }
+
+variable "log_analytics_workspace_id" {
+  type        = string
+  description = "(Required) ID for the log analytics workspace for the storage account diagnostic setting"
+}

@@ -14,3 +14,9 @@ resource "azurerm_subnet" "subnet" {
   enforce_private_link_endpoint_network_policies = true
 }
 
+module "virtual_network_diagnostic_setting" {
+  source                     = "../diagnostic-settings"
+  diagnostic_setting_name    = "${var.vnet_name}-diagnostic-settings"
+  target_resource_id         = azurerm_virtual_network.vnet.id
+  log_analytics_workspace_id = var.log_analytics_workspace_id
+}

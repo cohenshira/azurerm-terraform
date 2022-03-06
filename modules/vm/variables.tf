@@ -99,5 +99,19 @@ variable "data_disks" {
     lun                  = string
     caching              = string
   }))
-  default = null
+  default = {
+    "key" = {
+      caching              = null
+      create_option        = null
+      disk_size_gb         = null
+      lun                  = null
+      name                 = null
+      storage_account_type = null
+    }
+  }
+}
+
+variable "log_analytics_workspace_id" {
+  type        = string
+  description = "(Required) ID for the log analytics workspace for the virtual machine diagnostic setting"
 }

@@ -1,5 +1,5 @@
 {
-    "to_spoke": {
+    "ToSpoke": {
         "name": "ToSpoke",
         "address_prefix": "${address_prefix}",
         "next_hop_type" : "VirtualAppliance",

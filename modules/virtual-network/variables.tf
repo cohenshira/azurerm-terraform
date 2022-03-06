@@ -24,3 +24,7 @@ variable "subnets" {
   description = "(Required)Subnets list to create"
 }
 
+variable "log_analytics_workspace_id" {
+  type        = string
+  description = "(Required) ID for the log analytics workspace for the vnet diagnostic setting"
+}

@@ -8,20 +8,16 @@ resource "azurerm_public_ip" "pip" {
 
 
 module "firewall_policy" {
-  source                              = "./modules/firewall-policy"
-  location                            = var.location
-  resource_group_name                 = var.resource_group_name
-  firewall_policy_name                = var.firewall_policy_name
-  firewall_rule_collection_group_name = var.firewall_rule_collection_group_name
-  network_priority                    = var.network_priority
-  application_priority                = var.application_priority
-  nat_priority                        = var.nat_priority
-  app_rule_collections                = var.app_rule_collections
-  network_rule_collections            = var.network_rule_collections
-  nat_rule_collections                = var.nat_rule_collections
+  source = "./modules/firewall-policy"
+
+  location                           = var.location
+  resource_group_name                = var.resource_group_name
+  firewall_policy_name               = var.firewall_policy_name
+  network_rule_collection_groups     = var.network_rule_collection_groups
+  application_rule_collection_groups = var.application_rule_collection_groups
+  nat_rule_collection_groups         = var.nat_rule_collection_groups
 
 }
-
 
 resource "azurerm_firewall" "firewall" {
   name                = var.firewall_name
@@ -36,4 +32,10 @@ resource "azurerm_firewall" "firewall" {
   }
 }
 
+module "firewall_diagnostic_setting" {
+  source                     = "../diagnostic-settings"
+  diagnostic_setting_name    = "${var.firewall_name}-diagnostic-settings"
+  target_resource_id         = azurerm_firewall.firewall.id
+  log_analytics_workspace_id = var.log_analytics_workspace_id
+}
 

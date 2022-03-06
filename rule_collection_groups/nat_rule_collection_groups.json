@@ -1,0 +1,7 @@
+{
+    "nat_rule_collection_group" : {
+        "name" : "shira-firewall-nat-collection-group",
+        "priority": 103,
+        "nat_rule_collections": {}
+    }
+}

@@ -37,128 +37,143 @@ variable "firewall_policy_name" {
   description = "(Required)Name for the firewall policy"
 }
 
-variable "firewall_rule_collection_group_name" {
-  type        = string
-  description = "(Required)Name for the firewall collection group"
-}
-
-variable "network_priority" {
-  type        = number
-  description = "(Required)Priority number for the network collection group"
-}
-
-variable "application_priority" {
-  type        = number
-  description = "(Required)Priority number for the application collection group"
-}
-
-variable "nat_priority" {
-  type        = number
-  description = "(Required)Priority number for the NAT collection group"
-}
-
-variable "app_rule_collections" {
+variable "application_rule_collection_groups" {
+  description = "(Required) Application rule collection groups and rules"
   type = map(object({
     name     = string,
     priority = number,
-    action   = string,
-    rules = map(object({
-      name = string,
-      protocols = map(object({
-        protocol_type = string,
-        port          = number,
+    application_rule_collections = map(object({
+      name     = string,
+      priority = number,
+      action   = string,
+      rules = map(object({
+        name = string,
+        protocols = map(object({
+          protocol_type = string,
+          port          = number,
+        }))
+        source_addresses = list(string)
+        target_fqdns     = list(string)
       }))
-      source_addresses = list(string)
-      target_fqdns     = list(string)
     }))
   }))
   default = {
     "key" = {
-      action   = null
-      name     = null
-      priority = null
-      rules = {
+      application_rule_collections = {
         "key" = {
-          name = null
-          protocols = {
+          action   = null
+          name     = null
+          priority = null
+          rules = {
             "key" = {
-              port          = null
-              protocol_type = null
+              name = null
+              protocols = {
+                "key" = {
+                  port          = null
+                  protocol_type = null
+                }
+              }
+              source_addresses = null
+              target_fqdns     = null
             }
           }
-          source_addresses = null
-          target_fqdns     = null
         }
       }
+      name     = null
+      priority = null
     }
   }
-  description = "(Required)Application rule collections and rules"
 }
 
-variable "network_rule_collections" {
+variable "network_rule_collection_groups" {
+  description = "(Required) Network rule collection groups and rules"
   type = map(object({
     name     = string,
     priority = number,
-    action   = string,
-    rules = map(object({
-      name                  = string
-      protocols             = list(string)
-      source_addresses      = list(string)
-      destination_addresses = list(string)
-      destination_ports     = list(string)
+    network_rule_collections = map(object({
+      name     = string,
+      priority = number,
+      action   = string,
+      rules = map(object({
+        name                  = string
+        protocols             = list(string)
+        source_addresses      = list(string)
+        destination_addresses = list(string)
+        destination_ports     = list(string)
+      }))
     }))
   }))
   default = {
     "key" = {
-      action   = null
       name     = null
       priority = null
-      rules = {
+      network_rule_collections = {
         "key" = {
-          destination_addresses = null
-          destination_ports     = null
-          name                  = null
-          protocols             = null
-          source_addresses      = null
+          action   = null
+          name     = null
+          priority = null
+          rules = {
+            "key" = {
+              destination_addresses = null
+              destination_ports     = null
+              name                  = null
+              protocols             = null
+              source_addresses      = null
+            }
+          }
         }
       }
     }
   }
-  description = "(Required)Network rule collections and rules"
 }
 
-variable "nat_rule_collections" {
+variable "nat_rule_collection_groups" {
+  description = "(Required) NAT rule collectio groups and rules"
   type = map(object({
     name     = string,
     priority = number,
-    action   = string,
-    rules = map(object({
-      name                = string,
-      source_addresses    = list(string),
-      destination_address = string,
-      destination_ports   = list(string),
-      translated_port     = string,
-      translated_address  = string,
-      protocols           = list(string)
+    nat_rule_collections = map(object({
+      name     = string,
+      priority = number,
+      action   = string,
+      rules = map(object({
+        name                = string,
+        source_addresses    = list(string),
+        destination_address = string,
+        destination_ports   = list(string),
+        translated_port     = string,
+        translated_address  = string,
+        protocols           = list(string)
+      }))
     }))
   }))
   default = {
     "key" = {
-      action   = null
       name     = null
       priority = null
-      rules = {
+      nat_rule_collections = {
         "key" = {
-          destination_address = null
-          destination_ports   = null
-          name                = null
-          protocols           = null
-          source_addresses    = null
-          translated_address  = null
-          translated_port     = null
+          action   = null
+          name     = null
+          priority = null
+          rules = {
+            "key" = {
+              destination_address = null
+              destination_ports   = null
+              name                = null
+              protocols           = null
+              source_addresses    = null
+              translated_address  = null
+              translated_port     = null
+            }
+          }
         }
       }
     }
   }
-  description = "(Required)NAT rule collection and rules"
+}
+
+variable "log_analytics_workspace_id" {
+  type        = string
+  description = "(Required) ID for the log analytics workspace for the firewall diagnostic setting"
 }
