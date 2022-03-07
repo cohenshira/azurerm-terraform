@@ -1,11 +1,10 @@
 variable "location" {
   type        = string
-  description = "(Optional)Location for the created resources"
-  default     = "westeurope"
+  description = "(Optional) Location for the created resources"
 }
 
 variable "resource_group_name" {
-  description = "(Required)Resource group name for the created resources"
+  description = "(Required) Resource group name for the created resources"
   type        = string
 }
 
@@ -23,17 +22,17 @@ variable "ip_allocation" {
 
 variable "subnet_id" {
   type        = string
-  description = "(Required)ID of the subnet used in the network interface creation"
+  description = "(Required) ID of the subnet used in the network interface creation"
 }
 
 variable "hostname" {
   type        = string
-  description = "(Required)Name For The Virtual Machine"
+  description = "(Required) Name For The Virtual Machine"
 }
 
 variable "vm_size" {
   type        = string
-  description = "(Required)size for the VM"
+  description = "(Required) size for the VM in sku"
 }
 
 variable "pass_auth" {
@@ -49,17 +48,17 @@ variable "username" {
 
 variable "password" {
   type        = string
-  description = "(Required)user password"
+  description = "(Required) user password for connecting the virtual machine"
 }
 
 variable "publisher" {
   type        = string
-  description = "(Required)Publisher of the image"
+  description = "(Required) Publisher of the image"
 }
 
 variable "offer" {
   type        = string
-  description = "(Required)Offer of the image"
+  description = "(Required) Offer of the image"
 }
 
 variable "image_sku" {
@@ -75,19 +74,18 @@ variable "image_version" {
 
 variable "caching" {
   type        = string
-  description = "(Required)Caching for the internal OS disk"
+  description = "(Required) Caching for the internal OS disk"
 }
 
 variable "storage_account_type" {
   type        = string
-  description = "(Required)Type of sku redundancy for the OS disk"
+  description = "(Required) Type of sku redundancy for the OS disk"
 }
 
 variable "is_linux" {
   type        = bool
-  description = "(Required)If value eauals true, a linux machine will be created.Else, a windows machine will be created"
+  description = "(Required) If value eauals true, a linux machine will be created.Else, a windows machine will be created"
 }
-
 
 variable "data_disks" {
   description = "(Optional) map of data disk to add to the virtual machine"

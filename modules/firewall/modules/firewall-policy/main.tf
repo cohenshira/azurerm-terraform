@@ -4,9 +4,9 @@ resource "azurerm_firewall_policy" "firewall_policy" {
   location            = var.location
 }
 
-
 resource "azurerm_firewall_policy_rule_collection_group" "firewall_network_rule_collection_group" {
   for_each           = var.network_rule_collection_groups
+
   name               = each.value.name
   firewall_policy_id = azurerm_firewall_policy.firewall_policy.id
   priority           = each.value.priority
@@ -17,6 +17,7 @@ resource "azurerm_firewall_policy_rule_collection_group" "firewall_network_rule_
       name     = network_rule_collection.value.name
       priority = network_rule_collection.value.priority
       action   = network_rule_collection.value.action
+
       dynamic "rule" {
         for_each = network_rule_collection.value.rules
         content {
@@ -33,6 +34,7 @@ resource "azurerm_firewall_policy_rule_collection_group" "firewall_network_rule_
 
 resource "azurerm_firewall_policy_rule_collection_group" "firewall_application_rule_collection_group" {
   for_each           = var.application_rule_collection_groups
+
   name               = each.value.name
   priority           = each.value.priority
   firewall_policy_id = azurerm_firewall_policy.firewall_policy.id
@@ -43,10 +45,12 @@ resource "azurerm_firewall_policy_rule_collection_group" "firewall_application_r
       name     = application_rule_collection.value.name
       priority = application_rule_collection.value.priority
       action   = application_rule_collection.value.action
+
       dynamic "rule" {
         for_each = application_rule_collection.value.rules
         content {
           name = rule.value.name
+
           dynamic "protocols" {
             for_each = rule.value.protocols
             content {
@@ -64,6 +68,7 @@ resource "azurerm_firewall_policy_rule_collection_group" "firewall_application_r
 
 resource "azurerm_firewall_policy_rule_collection_group" "firewall_nat_rule_collection_group" {
   for_each           = var.nat_rule_collection_groups
+
   name               = each.value.name
   priority           = each.value.priority
   firewall_policy_id = azurerm_firewall_policy.firewall_policy.id
@@ -74,6 +79,7 @@ resource "azurerm_firewall_policy_rule_collection_group" "firewall_nat_rule_coll
       name     = nat_rule_collection.value.name
       priority = nat_rule_collection.value.priority
       action   = nat_rule_collection.value.action
+
       dynamic "rule" {
         for_each = nat_rule_collection.value.rules
         content {

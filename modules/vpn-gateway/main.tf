@@ -9,15 +9,12 @@ resource "azurerm_virtual_network_gateway" "gateway" {
   name                = var.gateway_name
   location            = var.location
   resource_group_name = var.resource_group_name
-
-  type     = var.gateway_type
-  vpn_type = var.vpn_type
-
-  active_active = var.active_active
-  enable_bgp    = var.enable_bgp
-  generation    = var.generation
-  sku           = var.gateway_sku
-
+  type                = var.gateway_type
+  vpn_type            = var.vpn_type
+  active_active       = var.active_active
+  enable_bgp          = var.enable_bgp
+  generation          = var.generation
+  sku                 = var.gateway_sku
 
   ip_configuration {
     name                          = "${var.gateway_name}-ipconf"
@@ -25,16 +22,16 @@ resource "azurerm_virtual_network_gateway" "gateway" {
     private_ip_address_allocation = var.ip_allocation
     subnet_id                     = var.subnet_id
   }
-  depends_on = [azurerm_public_ip.pip]
 
   vpn_client_configuration {
-    address_space = var.client_address_space
-
+    address_space        = var.client_address_space
     vpn_auth_types       = var.auth_type
     vpn_client_protocols = var.client_protocols
     aad_tenant           = var.tenant_id
     aad_audience         = var.audience
     aad_issuer           = var.issuer
   }
+
+  depends_on = [azurerm_public_ip.pip]
 }
 

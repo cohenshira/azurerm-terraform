@@ -1,5 +1,6 @@
 module "storage_account" {
   source                   = "./modules/storage-account"
+
   storage_account_name     = "examplesa"
   resource_group_name      = "example-resource-group"
   location                 = "westeurope"
@@ -9,5 +10,4 @@ module "storage_account" {
   subnet_id                = "/subscriptions/xxx/resourceGroups/example-resource-group/providers/Microsoft.Network/virtualNetworks/example-virtual-network/subnets/example-subnet"
   vnet_id                  = "/subscriptions/xxx/resourceGroups/example-resource-group/providers/Microsoft.Network/virtualNetworks/example-virtual-network"
   network_link_name        = "example-virtual-link"
-
 }

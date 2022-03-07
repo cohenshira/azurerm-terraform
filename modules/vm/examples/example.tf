@@ -1,5 +1,6 @@
 module "virtual_machine" {
   source               = "./modules/vm"
+
   location             = "westeurope"
   resource_group_name  = "example-resource-group"
   is_linux             = true
@@ -14,6 +15,7 @@ module "virtual_machine" {
   offer                = "RHEL"
   image_sku            = "82gen2"
   image_version        = "latest"
+
   data_disks = {
     data_disk_1 = {
       name                 = "example-vm-data-disk"

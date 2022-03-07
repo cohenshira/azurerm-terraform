@@ -1,26 +1,10 @@
 locals {
   hub_resource_group_name = "shira-hub-rg-tf"
-  location                = "westeurope"
 }
 
 resource "azurerm_resource_group" "hub_resource_group" {
   name     = local.hub_resource_group_name
   location = local.location
-}
-
-
-locals {
-  log_analytics_workspace_name = "shira-log-analytics-workspace"
-  retention_days               = 30
-  log_analytics_workspace_sku  = "PerGB2018"
-}
-
-resource "azurerm_log_analytics_workspace" "log_analytics_workspace" {
-  name                = local.log_analytics_workspace_name
-  location            = local.location
-  resource_group_name = azurerm_resource_group.hub_resource_group.name
-  sku                 = local.log_analytics_workspace_sku
-  retention_in_days   = local.retention_days
 }
 
 locals {
@@ -57,7 +41,6 @@ module "hub_vnet" {
   ]
 }
 
-
 locals {
   firewall_name        = "shira-hub-firewall-tf-final"
   firewall_policy_name = "shira-hub-firewall-policy-tf"
@@ -82,10 +65,10 @@ module "hub_firewall" {
   log_analytics_workspace_id         = azurerm_log_analytics_workspace.log_analytics_workspace.id
 
   depends_on = [
-    module.hub_vnet.vnet, module.hub_vnet.subnet
+    module.hub_vnet.vnet,
+    module.hub_vnet.subnet
   ]
 }
-
 
 locals {
   hub_gateway_name         = "shira-hub-gw-tf"
@@ -111,7 +94,6 @@ module "hub_vnet_gateway" {
   ]
 }
 
-
 locals {
   hub_route_table_name = "shira-hub-route-table-tf"
   hub_routes_variables = {
@@ -127,13 +109,16 @@ module "to_spoke_route_table" {
   location            = azurerm_resource_group.hub_resource_group.location
   resource_group_name = azurerm_resource_group.hub_resource_group.name
   routes              = jsondecode(templatefile("./routes/hub_routes.json", local.hub_routes_variables))
-  subnet_ids          = [lookup(module.hub_vnet.created_subnets, "GatewaySubnet")]
+  subnets = {
+    GatewaySubnet = lookup(module.hub_vnet.created_subnets, "GatewaySubnet")
+  }
 
   depends_on = [
-    module.spoke_vnet, module.hub_vnet, module.hub_firewall
+    module.spoke_vnet,
+    module.hub_vnet,
+    module.hub_firewall
   ]
 }
-
 
 locals {
   hub_hostname = "shira-hub-vm-tf"
@@ -149,22 +134,24 @@ locals {
     sku       = "82gen2"
     version   = "latest"
   }
-
 }
 
 module "hub_virtual_machine" {
   source = "./modules/vm"
 
-  hostname                   = local.hub_hostname
-  is_linux                   = local.is_linux
-  location                   = azurerm_resource_group.hub_resource_group.location
-  resource_group_name        = azurerm_resource_group.hub_resource_group.name
-  subnet_id                  = lookup(module.hub_vnet.created_subnets, local.hub_subnets.default_subnet.name)
-  vm_size                    = local.hub_vm_size
-  username                   = var.vm_user
-  password                   = var.password
-  caching                    = local.hub_os_disk.caching
-  storage_account_type       = local.hub_os_disk.storage_account_type
+  hostname            = local.hub_hostname
+  is_linux            = local.is_linux
+  location            = azurerm_resource_group.hub_resource_group.location
+  resource_group_name = azurerm_resource_group.hub_resource_group.name
+  subnet_id           = lookup(module.hub_vnet.created_subnets, local.hub_subnets.default_subnet.name)
+  vm_size             = local.hub_vm_size
+  ############ Authentication ############
+  username = var.vm_user
+  password = var.password
+  ############ OS disk ############
+  caching              = local.hub_os_disk.caching
+  storage_account_type = local.hub_os_disk.storage_account_type
+  ############ Source image reference ############
   publisher                  = local.hub_source_image_reference.publisher
   offer                      = local.hub_source_image_reference.offer
   image_sku                  = local.hub_source_image_reference.sku
@@ -176,4 +163,3 @@ module "hub_virtual_machine" {
     module.hub_vnet.vnet
   ]
 }
-

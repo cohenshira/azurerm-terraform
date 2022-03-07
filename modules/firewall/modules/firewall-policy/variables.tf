@@ -33,30 +33,12 @@ variable "application_rule_collection_groups" {
       }))
     }))
   }))
+
   default = {
     "key" = {
-      application_rule_collections = {
-        "key" = {
-          action   = null
-          name     = null
-          priority = null
-          rules = {
-            "key" = {
-              name = null
-              protocols = {
-                "key" = {
-                  port          = null
-                  protocol_type = null
-                }
-              }
-              source_addresses = null
-              target_fqdns     = null
-            }
-          }
-        }
-      }
-      name     = null
-      priority = null
+      application_rule_collections = {}
+      name                         = null
+      priority                     = null
     }
   }
 }
@@ -79,26 +61,12 @@ variable "network_rule_collection_groups" {
       }))
     }))
   }))
+
   default = {
     "key" = {
-      name     = null
-      priority = null
-      network_rule_collections = {
-        "key" = {
-          action   = null
-          name     = null
-          priority = null
-          rules = {
-            "key" = {
-              destination_addresses = null
-              destination_ports     = null
-              name                  = null
-              protocols             = null
-              source_addresses      = null
-            }
-          }
-        }
-      }
+      name                     = null
+      network_rule_collections = {}
+      priority                 = null
     }
   }
 }
@@ -123,29 +91,12 @@ variable "nat_rule_collection_groups" {
       }))
     }))
   }))
+
   default = {
     "key" = {
-      name     = null
-      priority = null
-      nat_rule_collections = {
-        "key" = {
-          action   = null
-          name     = null
-          priority = null
-          rules = {
-            "key" = {
-              destination_address = null
-              destination_ports   = null
-              name                = null
-              protocols           = null
-              source_addresses    = null
-              translated_address  = null
-              translated_port     = null
-            }
-          }
-        }
-      }
+      name                 = null
+      nat_rule_collections = {}
+      priority             = null
     }
   }
 }
-

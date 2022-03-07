@@ -1,17 +1,16 @@
 variable "location" {
   type        = string
-  description = "(Optional)Location where the resources will be created"
-  default     = "westeurope"
+  description = "(Optional) Location where the resources will be created"
 }
 
 variable "resource_group_name" {
   type        = string
-  description = "(Required)Resource Group Name for the created resources"
+  description = "(Required) Resource Group Name for the created resources"
 }
 
 variable "network_security_group_name" {
   type        = string
-  description = "(Required)Name for the Network security group"
+  description = "(Required) Name for the Network security group"
 }
 
 variable "network_security_group_rules" {
@@ -30,29 +29,12 @@ variable "network_security_group_rules" {
     destination_address_prefix   = optional(string)
     destination_address_prefixes = optional(list(string))
   }))
-  default = {
-    "key" = {
-      access                       = null
-      destination_address_prefix   = null
-      destination_address_prefixes = []
-      destination_port_range       = null
-      destination_port_ranges      = []
-      direction                    = null
-      name                         = null
-      priority                     = 100
-      protocol                     = null
-      source_address_prefix        = null
-      source_address_prefixes      = []
-      source_port_range            = null
-      source_port_ranges           = []
-    }
-  }
-  description = "(Required)Rules of the network security group"
+  description = "(Required) Rules of the network security group, can be single or plural range/s and prefix/es"
 }
 
-variable "subnet_ids" {
-  type        = list(string)
-  description = "(Required)ID of the subnet we want to connect the network security group"
+variable "subnets" {
+  type        = map(any)
+  description = "(Required) map of subnets names and its ids to associate the network security group"
 }
 
 variable "log_analytics_workspace_id" {

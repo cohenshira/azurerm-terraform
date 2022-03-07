@@ -1,34 +1,33 @@
 variable "resource_group_name" {
   type        = string
-  description = "(Required)Resource group where the resources will be created"
+  description = "(Required) Resource group where the resources will be created"
 }
 
 variable "location" {
   type        = string
-  description = "(Optional)Location for the created resources"
-  default     = "westeurope"
+  description = "(Optional) Location for the created resources"
 }
 
 variable "route_table_name" {
   type        = string
-  description = "(Required)Route Table Name"
+  description = "(Required) Route Table Name"
 }
 
-
-variable "subnet_ids" {
-  type        = list(string)
-  description = "(Required)The ID of the associated subnets"
+variable "subnets" {
+  type        = map
+  description = "(Required) map of the subnets names and its ids to associate the route table"
 }
 
 variable "routes" {
+  description = "(Required) Routes for the route table"
   type = map(object({
     name           = string
     address_prefix = string
     next_hop_type  = string
     next_hop_ip    = optional(string)
   }))
+
   default = {
     next_hop_ip = null
   }
-  description = "(Required)Routes for the route table"
 }

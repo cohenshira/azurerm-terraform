@@ -1,5 +1,6 @@
 module "vpn-gateway" {
   source               = "./modules/vpn-gateway"
+  
   location             = "westeurope"
   resource_group_name  = "example-resource-group"
   gateway_name         = "example-virtual-network-gateway"

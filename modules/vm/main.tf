@@ -1,7 +1,3 @@
-terraform {
-  experiments = [module_variable_optional_attrs]
-}
-
 resource "azurerm_public_ip" "vm_public_ip" {
   name                = "${var.hostname}-pip"
   location            = var.location
@@ -35,8 +31,6 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
   admin_password                  = var.password
   network_interface_ids           = ["${azurerm_network_interface.vmnic.id}"]
 
-
-
   os_disk {
     caching              = var.caching
     storage_account_type = var.storage_account_type
@@ -49,7 +43,6 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
     version   = var.image_version
   }
 }
-
 
 resource "azurerm_windows_virtual_machine" "windows_vm" {
   count                 = var.is_linux ? 0 : 1
@@ -73,12 +66,11 @@ resource "azurerm_windows_virtual_machine" "windows_vm" {
     sku       = var.image_sku
     version   = var.image_version
   }
-
 }
-
 
 resource "azurerm_managed_disk" "data_disk" {
   for_each             = var.data_disks
+
   name                 = each.value.name
   location             = var.location
   resource_group_name  = var.resource_group_name
@@ -89,6 +81,7 @@ resource "azurerm_managed_disk" "data_disk" {
 
 resource "azurerm_virtual_machine_data_disk_attachment" "data_disk_attachment" {
   for_each           = var.data_disks
+
   managed_disk_id    = azurerm_managed_disk.data_disk[each.key].id
   virtual_machine_id = var.is_linux ? azurerm_linux_virtual_machine.linux_vm.0.id : azurerm_windows_virtual_machine.windows_vm.0.id
   lun                = each.value.lun
@@ -97,6 +90,7 @@ resource "azurerm_virtual_machine_data_disk_attachment" "data_disk_attachment" {
 
 module "virtual_machine_diagnostic_setting" {
   source                     = "../diagnostic-settings"
+
   diagnostic_setting_name    = "${var.hostname}-diagnostic-settings"
   target_resource_id         = var.is_linux ? azurerm_linux_virtual_machine.linux_vm.0.id : azurerm_windows_virtual_machine.windows_vm.0.id
   log_analytics_workspace_id = var.log_analytics_workspace_id

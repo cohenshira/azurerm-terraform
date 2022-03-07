@@ -6,7 +6,6 @@ resource "azurerm_public_ip" "pip" {
   sku                 = var.pip_sku
 }
 
-
 module "firewall_policy" {
   source = "./modules/firewall-policy"
 
@@ -16,7 +15,6 @@ module "firewall_policy" {
   network_rule_collection_groups     = var.network_rule_collection_groups
   application_rule_collection_groups = var.application_rule_collection_groups
   nat_rule_collection_groups         = var.nat_rule_collection_groups
-
 }
 
 resource "azurerm_firewall" "firewall" {
@@ -34,6 +32,7 @@ resource "azurerm_firewall" "firewall" {
 
 module "firewall_diagnostic_setting" {
   source                     = "../diagnostic-settings"
+  
   diagnostic_setting_name    = "${var.firewall_name}-diagnostic-settings"
   target_resource_id         = azurerm_firewall.firewall.id
   log_analytics_workspace_id = var.log_analytics_workspace_id
