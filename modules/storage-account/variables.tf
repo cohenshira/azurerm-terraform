@@ -10,7 +10,7 @@ variable "resource_group_name" {
 
 variable "location" {
   type        = string
-  description = "(Optional) Location for the created resources"
+  description = "(Required) Location for the created resources"
 }
 
 variable "account_tier" {

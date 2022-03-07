@@ -1,6 +1,6 @@
 variable "location" {
   type        = string
-  description = "(Optional) Location where the resources will be created"
+  description = "(Required) Location where the resources will be created"
 }
 
 variable "resource_group_name" {
