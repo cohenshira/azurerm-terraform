@@ -35,7 +35,7 @@ variable "vm_size" {
   description = "(Required) size for the VM in sku"
 }
 
-variable "pass_auth" {
+variable "disable_password_authentication" {
   type        = bool
   description = "(Optional) Disabling Password authentication - true or false"
   default     = false
@@ -74,7 +74,7 @@ variable "image_version" {
 
 variable "caching" {
   type        = string
-  description = "(Required) Caching for the internal OS disk"
+  description = "(Required) Caching type for the internal OS disk. Can be ReadWrite, ReadOnly or None"
 }
 
 variable "storage_account_type" {

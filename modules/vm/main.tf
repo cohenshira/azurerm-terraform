@@ -6,7 +6,7 @@ resource "azurerm_public_ip" "vm_public_ip" {
   sku                 = var.pip_sku
 }
 
-resource "azurerm_network_interface" "vmnic" {
+resource "azurerm_network_interface" "vm_network_interface" {
   name                = "${var.hostname}-nic"
   location            = var.location
   resource_group_name = var.resource_group_name
@@ -26,10 +26,10 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
   location                        = var.location
   size                            = var.vm_size
   computer_name                   = var.hostname
-  disable_password_authentication = var.pass_auth
+  disable_password_authentication = var.disable_password_authentication
   admin_username                  = var.username
   admin_password                  = var.password
-  network_interface_ids           = ["${azurerm_network_interface.vmnic.id}"]
+  network_interface_ids           = ["${azurerm_network_interface.vm_network_interface.id}"]
 
   os_disk {
     caching              = var.caching
@@ -53,7 +53,7 @@ resource "azurerm_windows_virtual_machine" "windows_vm" {
   computer_name         = var.hostname
   admin_username        = var.username
   admin_password        = var.password
-  network_interface_ids = ["${azurerm_network_interface.vmnic.id}"]
+  network_interface_ids = ["${azurerm_network_interface.vm_network_interface.id}"]
 
   os_disk {
     caching              = var.caching

@@ -65,7 +65,7 @@ module "hub_firewall" {
   log_analytics_workspace_id         = azurerm_log_analytics_workspace.log_analytics_workspace.id
 
   depends_on = [
-    module.hub_vnet.vnet,
+    module.hub_vnet.object,
     module.hub_vnet.subnet
   ]
 }
@@ -160,6 +160,6 @@ module "hub_virtual_machine" {
   log_analytics_workspace_id = azurerm_log_analytics_workspace.log_analytics_workspace.id
 
   depends_on = [
-    module.hub_vnet.vnet
+    module.hub_vnet.object
   ]
 }
