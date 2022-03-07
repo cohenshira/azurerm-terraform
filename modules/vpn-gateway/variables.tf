@@ -32,15 +32,15 @@ variable "vpn_type" {
 }
 
 variable "active_active" {
-  type    = bool
+  type        = bool
   description = "(Optional) if value equals true, an active-active vpn gateway will be created. Else, an active-standby vpn gateway will be created"
-  default = false
+  default     = false
 }
 
 variable "enable_bgp" {
-  type    = bool
+  type        = bool
   description = "(Optional) Enabling border gateway protocol"
-  default = false
+  default     = false
 }
 
 variable "generation" {
