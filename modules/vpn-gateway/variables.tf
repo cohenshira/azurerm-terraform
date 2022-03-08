@@ -18,7 +18,7 @@ variable "public_ips" {
     name          = string
     ip_allocation = string
   }))
-  description = "(Required) map of public ips to associate the vpn gateway. Would be more than one if gateway is active active"
+  description = "(Required) map of public ips to associate the vpn gateway. Should be more than one if gateway is active active"
 }
 
 variable "gateway_type" {

@@ -12,8 +12,8 @@ resource "azurerm_network_security_rule" "network_rules" {
   access             = each.value.access
   priority           = each.value.priority
   protocol           = each.value.protocol
-  source_port_range  = each.value.source_port_range
-  source_port_ranges = each.value.source_port_ranges
+  source_port_range  = each.value.source_port_range == null ? null : each.value.source_port_range
+  source_port_ranges = each.value.source_port_ranges == [] ? [] : each.value.source_port_ranges
 
   destination_port_range  = each.value.destination_port_range == null ? null : each.value.destination_port_range
   destination_port_ranges = each.value.destination_port_ranges == [] ? [] : each.value.destination_port_ranges
