@@ -28,11 +28,15 @@ resource "azurerm_firewall" "firewall" {
     subnet_id            = var.subnet_id
     public_ip_address_id = azurerm_public_ip.pip.id
   }
+
+  depends_on = [
+    module.firewall_policy
+  ]
 }
 
 module "firewall_diagnostic_setting" {
-  source                     = "../diagnostic-settings"
-  
+  source = "../diagnostic-settings"
+
   diagnostic_setting_name    = "${var.firewall_name}-diagnostic-settings"
   target_resource_id         = azurerm_firewall.firewall.id
   log_analytics_workspace_id = var.log_analytics_workspace_id

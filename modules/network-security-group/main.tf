@@ -5,7 +5,7 @@ resource "azurerm_network_security_group" "network_security_group" {
 }
 
 resource "azurerm_network_security_rule" "network_rules" {
-  for_each           = var.network_security_group_rules
+  for_each = var.network_security_group_rules
 
   name               = each.key
   direction          = each.value.direction
@@ -29,7 +29,7 @@ resource "azurerm_network_security_rule" "network_rules" {
 }
 
 resource "azurerm_subnet_network_security_group_association" "subnet_association" {
-  for_each                  = var.subnets
+  for_each = var.subnets
 
   subnet_id                 = each.value
   network_security_group_id = azurerm_network_security_group.network_security_group.id

@@ -5,10 +5,10 @@ locals {
   log_analytics_workspace_sku  = "PerGB2018"
 }
 
-resource "azurerm_log_analytics_workspace" "log_analytics_workspace" {
+resource "azurerm_log_analytics_workspace" "central_workspace" {
   name                = local.log_analytics_workspace_name
   location            = local.location
-  resource_group_name = azurerm_resource_group.hub_resource_group.name
+  resource_group_name = azurerm_resource_group.hub.name
   sku                 = local.log_analytics_workspace_sku
   retention_in_days   = local.retention_days
 }
@@ -31,8 +31,8 @@ module "hub_spoke_peering" {
   vnet_name_1 = module.hub_vnet.name
   vnet_name_2 = module.spoke_vnet.name
 
-  resource_group_name_1 = azurerm_resource_group.hub_resource_group.name
-  resource_group_name_2 = azurerm_resource_group.spoke_resource_group.name
+  resource_group_name_1 = azurerm_resource_group.hub.name
+  resource_group_name_2 = azurerm_resource_group.spoke.name
 
   vnet_id_1 = module.hub_vnet.id
   vnet_id_2 = module.spoke_vnet.id
@@ -44,7 +44,7 @@ module "hub_spoke_peering" {
   gateway_transit_2 = local.spoke_gateway_transit
 
   depends_on = [
-    module.hub_vnet.object,
-    module.spoke_vnet.object
+    module.hub_vnet,
+    module.spoke_vnet
   ]
 }

@@ -2,7 +2,7 @@ locals {
   hub_resource_group_name = "shira-hub-rg-tf"
 }
 
-resource "azurerm_resource_group" "hub_resource_group" {
+resource "azurerm_resource_group" "hub" {
   name     = local.hub_resource_group_name
   location = local.location
 }
@@ -30,14 +30,14 @@ module "hub_vnet" {
   source = "./modules/virtual-network"
 
   vnet_name                  = local.hub_vnet_name
-  location                   = azurerm_resource_group.hub_resource_group.location
-  resource_group_name        = azurerm_resource_group.hub_resource_group.name
+  location                   = azurerm_resource_group.hub.location
+  resource_group_name        = azurerm_resource_group.hub.name
   vnet_address_space         = local.hub_vnet_address_space
   subnets                    = local.hub_subnets
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.log_analytics_workspace.id
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.central_workspace.id
 
   depends_on = [
-    azurerm_resource_group.hub_resource_group
+    azurerm_resource_group.hub
   ]
 }
 
@@ -56,32 +56,36 @@ module "hub_firewall" {
 
   firewall_name                      = local.firewall_name
   firewall_policy_name               = local.firewall_policy_name
-  location                           = azurerm_resource_group.hub_resource_group.location
-  resource_group_name                = azurerm_resource_group.hub_resource_group.name
+  location                           = azurerm_resource_group.hub.location
+  resource_group_name                = azurerm_resource_group.hub.name
   network_rule_collection_groups     = jsondecode(templatefile("./rule_collection_groups/network_rule_collection_groups.json", local.network_collection_group_variables))
   application_rule_collection_groups = jsondecode(file("./rule_collection_groups/application_rule_collection_groups.json"))
   nat_rule_collection_groups         = jsondecode(file("./rule_collection_groups/nat_rule_collection_groups.json"))
   subnet_id                          = lookup(module.hub_vnet.created_subnets, "AzureFirewallSubnet")
-  log_analytics_workspace_id         = azurerm_log_analytics_workspace.log_analytics_workspace.id
+  log_analytics_workspace_id         = azurerm_log_analytics_workspace.central_workspace.id
 
-  depends_on = [
-    module.hub_vnet.object,
-    module.hub_vnet.subnet
-  ]
+  depends_on = [module.hub_vnet]
 }
 
 locals {
   hub_gateway_name         = "shira-hub-gw-tf"
   hub_client_address_space = ["172.20.0.0/24"]
   auth_type                = ["AAD"]
+  gateway_public_ips = {
+    gateway_public_ip = {
+      name          = "shira-hub-gw-pip"
+      ip_allocation = "Dynamic"
+    }
+  }
 }
 
 module "hub_vnet_gateway" {
   source = "./modules/vpn-gateway"
 
   gateway_name         = local.hub_gateway_name
-  location             = azurerm_resource_group.hub_resource_group.location
-  resource_group_name  = azurerm_resource_group.hub_resource_group.name
+  public_ips           = local.gateway_public_ips
+  location             = azurerm_resource_group.hub.location
+  resource_group_name  = azurerm_resource_group.hub.name
   subnet_id            = lookup(module.hub_vnet.created_subnets, "GatewaySubnet")
   client_address_space = local.hub_client_address_space
   auth_type            = local.auth_type
@@ -106,8 +110,8 @@ module "to_spoke_route_table" {
   source = "./modules/route-table"
 
   route_table_name    = local.hub_route_table_name
-  location            = azurerm_resource_group.hub_resource_group.location
-  resource_group_name = azurerm_resource_group.hub_resource_group.name
+  location            = azurerm_resource_group.hub.location
+  resource_group_name = azurerm_resource_group.hub.name
   routes              = jsondecode(templatefile("./routes/hub_routes.json", local.hub_routes_variables))
   subnets = {
     GatewaySubnet = lookup(module.hub_vnet.created_subnets, "GatewaySubnet")
@@ -141,8 +145,8 @@ module "hub_virtual_machine" {
 
   hostname            = local.hub_hostname
   is_linux            = local.is_linux
-  location            = azurerm_resource_group.hub_resource_group.location
-  resource_group_name = azurerm_resource_group.hub_resource_group.name
+  location            = azurerm_resource_group.hub.location
+  resource_group_name = azurerm_resource_group.hub.name
   subnet_id           = lookup(module.hub_vnet.created_subnets, local.hub_subnets.default_subnet.name)
   vm_size             = local.hub_vm_size
   ############ Authentication ############
@@ -157,9 +161,9 @@ module "hub_virtual_machine" {
   image_sku                  = local.hub_source_image_reference.sku
   image_version              = local.hub_source_image_reference.version
   data_disks                 = {}
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.log_analytics_workspace.id
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.central_workspace.id
 
   depends_on = [
-    module.hub_vnet.object
+    module.hub_vnet
   ]
 }

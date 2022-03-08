@@ -13,10 +13,12 @@ variable "resource_group_name" {
   description = "(Required) Resource group name for the created resources"
 }
 
-variable "ip_allocation" {
-  type        = string
-  description = "(Optional) IP Allocation type - Static or Dynamic"
-  default     = "Dynamic"
+variable "public_ips" {
+  type = map(object({
+    name          = string
+    ip_allocation = string
+  }))
+  description = "(Required) map of public ips to associate the vpn gateway. Would be more than one if gateway is active active"
 }
 
 variable "gateway_type" {

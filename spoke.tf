@@ -2,7 +2,7 @@ locals {
   spoke_resource_group_name = "shira-spoke-rg-tf"
 }
 
-resource "azurerm_resource_group" "spoke_resource_group" {
+resource "azurerm_resource_group" "spoke" {
   name     = local.spoke_resource_group_name
   location = local.location
 }
@@ -22,14 +22,14 @@ module "spoke_vnet" {
   source = "./modules/virtual-network"
 
   vnet_name                  = local.spoke_vnet_name
-  location                   = azurerm_resource_group.spoke_resource_group.location
-  resource_group_name        = azurerm_resource_group.spoke_resource_group.name
+  location                   = azurerm_resource_group.spoke.location
+  resource_group_name        = azurerm_resource_group.spoke.name
   vnet_address_space         = local.spoke_vnet_address_space
   subnets                    = local.spoke_subnets
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.log_analytics_workspace.id
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.central_workspace.id
 
   depends_on = [
-    azurerm_resource_group.spoke_resource_group
+    azurerm_resource_group.spoke
   ]
 }
 
@@ -40,16 +40,16 @@ locals {
 module "spoke_network_security_group" {
   source = "./modules/network-security-group"
 
-  location                     = azurerm_resource_group.spoke_resource_group.location
-  resource_group_name          = azurerm_resource_group.spoke_resource_group.name
+  location                     = azurerm_resource_group.spoke.location
+  resource_group_name          = azurerm_resource_group.spoke.name
   network_security_group_name  = local.spoke_network_security_group_name
   network_security_group_rules = jsondecode(file("./network_security_groups/network_security_group_rules.json"))
   subnets                      = module.spoke_vnet.created_subnets
-  log_analytics_workspace_id   = azurerm_log_analytics_workspace.log_analytics_workspace.id
+  log_analytics_workspace_id   = azurerm_log_analytics_workspace.central_workspace.id
 
   depends_on = [
-    module.spoke_vnet.subnets,
-    module.hub_firewall.object
+    module.spoke_vnet,
+    module.hub_firewall
   ]
 }
 
@@ -66,14 +66,14 @@ module "to_hub_route_table" {
   source = "./modules/route-table"
 
   route_table_name    = local.spoke_route_table_name
-  location            = azurerm_resource_group.spoke_resource_group.location
-  resource_group_name = azurerm_resource_group.spoke_resource_group.name
+  location            = azurerm_resource_group.spoke.location
+  resource_group_name = azurerm_resource_group.spoke.name
   routes              = jsondecode(templatefile("./routes/spoke_routes.json", local.spoke_route_variables))
   subnets             = module.spoke_vnet.created_subnets
 
   depends_on = [
     module.hub_vnet,
-    module.spoke_vnet.created_subnets,
+    module.spoke_vnet,
     module.hub_firewall
   ]
 }
@@ -90,15 +90,15 @@ module "storage_account" {
   source = "./modules/storage-account"
 
   storage_account_name       = local.storage_account_name
-  resource_group_name        = azurerm_resource_group.spoke_resource_group.name
-  location                   = azurerm_resource_group.spoke_resource_group.location
+  resource_group_name        = azurerm_resource_group.spoke.name
+  location                   = azurerm_resource_group.spoke.location
   account_tier               = local.account_tier
   account_replication_type   = local.account_replication_type
   is_manual_connection       = local.is_manual_connection
   subnet_id                  = module.spoke_vnet.subnet_ids_list[0]
   vnet_id                    = module.spoke_vnet.id
   network_link_name          = local.virtual_link_name
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.log_analytics_workspace.id
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.central_workspace.id
 
   depends_on = [
     module.spoke_vnet
@@ -137,8 +137,8 @@ module "spoke_virtual_machine" {
   source = "./modules/vm"
 
   hostname            = local.spoke_hostname
-  location            = azurerm_resource_group.spoke_resource_group.location
-  resource_group_name = azurerm_resource_group.spoke_resource_group.name
+  location            = azurerm_resource_group.spoke.location
+  resource_group_name = azurerm_resource_group.spoke.name
   is_linux            = local.is_linux
   subnet_id           = lookup(module.spoke_vnet.created_subnets, local.spoke_subnets.default_subnet.name)
   vm_size             = local.spoke_vm_size
@@ -154,9 +154,9 @@ module "spoke_virtual_machine" {
   image_sku                  = local.spoke_source_image_reference.sku
   image_version              = local.spoke_source_image_reference.version
   data_disks                 = local.data_disks
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.log_analytics_workspace.id
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.central_workspace.id
 
   depends_on = [
-    module.spoke_vnet.object
+    module.spoke_vnet
   ]
 }

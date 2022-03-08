@@ -1,5 +1,5 @@
 module "virtual_machine" {
-  source               = "./modules/vm"
+  source = "./modules/vm"
 
   location             = "westeurope"
   resource_group_name  = "example-resource-group"

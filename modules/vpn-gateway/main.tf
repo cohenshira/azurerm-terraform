@@ -1,8 +1,10 @@
 resource "azurerm_public_ip" "pip" {
-  name                = "${var.gateway_name}-pip"
+  for_each = var.public_ips
+
+  name                = each.value.name
   location            = var.location
   resource_group_name = var.resource_group_name
-  allocation_method   = var.ip_allocation
+  allocation_method   = each.value.ip_allocation
 }
 
 resource "azurerm_virtual_network_gateway" "gateway" {
@@ -16,11 +18,15 @@ resource "azurerm_virtual_network_gateway" "gateway" {
   generation          = var.generation
   sku                 = var.gateway_sku
 
-  ip_configuration {
-    name                          = "${var.gateway_name}-ipconf"
-    public_ip_address_id          = azurerm_public_ip.pip.id
-    private_ip_address_allocation = var.ip_allocation
-    subnet_id                     = var.subnet_id
+  dynamic "ip_configuration" {
+    for_each = var.public_ips
+
+    content {
+      name                          = "${ip_configuration.value.name}-ipconf"
+      public_ip_address_id          = azurerm_public_ip.pip[ip_configuration.key].id
+      private_ip_address_allocation = ip_configuration.value.ip_allocation
+      subnet_id                     = var.subnet_id
+    }
   }
 
   vpn_client_configuration {

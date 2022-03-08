@@ -19,7 +19,10 @@ variable "vnet_address_space" {
 }
 
 variable "subnets" {
-  type        = map(any)
+  type = map(object({
+    name             = string
+    address_prefixes = list(string)
+  }))
   description = "(Required) Subnets list to create"
 }
 

@@ -1,6 +1,6 @@
 module "virtual_network" {
-  source              = "./modules/virtual-network"
-  
+  source = "./modules/virtual-network"
+
   location            = "westeurope"
   resource_group_name = "example-resource-group"
   vnet_name           = "example-vnet"
