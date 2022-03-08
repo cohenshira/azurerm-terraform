@@ -35,8 +35,7 @@ variable "is_manual_connection" {
 
 variable "private_dns_zone_name" {
   type        = string
-  description = "(Optional) Name for the dns zone"
-  default     = "privatelink.blob.core.windows.net"
+  description = "(Required) Name for the dns zone"
 }
 
 variable "vnet_id" {

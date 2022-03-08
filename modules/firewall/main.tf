@@ -30,7 +30,8 @@ resource "azurerm_firewall" "firewall" {
   }
 
   depends_on = [
-    module.firewall_policy
+    module.firewall_policy,
+    azurerm_public_ip.pip
   ]
 }
 
@@ -40,5 +41,9 @@ module "firewall_diagnostic_setting" {
   diagnostic_setting_name    = "${var.firewall_name}-diagnostic-settings"
   target_resource_id         = azurerm_firewall.firewall.id
   log_analytics_workspace_id = var.log_analytics_workspace_id
+
+  depends_on = [
+    azurerm_firewall.firewall
+  ]
 }
 

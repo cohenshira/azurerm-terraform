@@ -97,16 +97,7 @@ variable "data_disks" {
     lun                  = string
     caching              = string
   }))
-  default = {
-    "key" = {
-      caching              = null
-      create_option        = null
-      disk_size_gb         = null
-      lun                  = null
-      name                 = null
-      storage_account_type = null
-    }
-  }
+  default = {}
 }
 
 variable "log_analytics_workspace_id" {

@@ -34,13 +34,7 @@ variable "application_rule_collection_groups" {
     }))
   }))
 
-  default = {
-    "key" = {
-      application_rule_collections = {}
-      name                         = null
-      priority                     = null
-    }
-  }
+  default = {}
 }
 
 variable "network_rule_collection_groups" {
@@ -62,13 +56,7 @@ variable "network_rule_collection_groups" {
     }))
   }))
 
-  default = {
-    "key" = {
-      name                     = null
-      network_rule_collections = {}
-      priority                 = null
-    }
-  }
+  default = {}
 }
 
 variable "nat_rule_collection_groups" {
@@ -92,11 +80,5 @@ variable "nat_rule_collection_groups" {
     }))
   }))
 
-  default = {
-    "key" = {
-      name                 = null
-      nat_rule_collections = {}
-      priority             = null
-    }
-  }
+  default = {}
 }

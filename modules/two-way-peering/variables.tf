@@ -3,11 +3,6 @@ variable "resource_group_name_1" {
   description = "(Required) Resource Group for the first peering resource "
 }
 
-variable "resource_group_name_2" {
-  type        = string
-  description = "(Required) Resource Group for the second peering resource "
-}
-
 variable "peer_name_1" {
   type        = string
   description = "(Required) Name for the first peer"
@@ -23,6 +18,11 @@ variable "vnet_id_1" {
   description = "(Required) First Virtual Network ID"
 }
 
+variable "gateway_transit_1" {
+  type        = bool
+  description = "(Required) Control gateway links"
+}
+
 variable "remote_gateways_1" {
   type        = bool
   description = "(Required) Controls if remote gateways can be used on the local virtual network"
@@ -34,9 +34,9 @@ variable "forward_traffic_1" {
   default     = true
 }
 
-variable "gateway_transit_1" {
-  type        = bool
-  description = "(Required) Control gateway links"
+variable "resource_group_name_2" {
+  type        = string
+  description = "(Required) Resource Group for the second peering resource "
 }
 
 variable "peer_name_2" {

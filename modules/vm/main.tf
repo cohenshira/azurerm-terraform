@@ -94,4 +94,9 @@ module "virtual_machine_diagnostic_setting" {
   diagnostic_setting_name    = "${var.hostname}-diagnostic-settings"
   target_resource_id         = var.is_linux ? azurerm_linux_virtual_machine.linux_vm.0.id : azurerm_windows_virtual_machine.windows_vm.0.id
   log_analytics_workspace_id = var.log_analytics_workspace_id
+
+  depends_on = [
+    azurerm_linux_virtual_machine.linux_vm,
+    azurerm_windows_virtual_machine.windows_vm
+  ]
 }

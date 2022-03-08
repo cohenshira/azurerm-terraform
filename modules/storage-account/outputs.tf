@@ -16,5 +16,4 @@ output "name" {
 output "private_endpoint" {
   value       = azurerm_private_endpoint.private_endpoint
   description = "Storage account private endpoint"
-
 }

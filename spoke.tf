@@ -29,7 +29,8 @@ module "spoke_vnet" {
   log_analytics_workspace_id = azurerm_log_analytics_workspace.central_workspace.id
 
   depends_on = [
-    azurerm_resource_group.spoke
+    azurerm_resource_group.spoke,
+    azurerm_log_analytics_workspace.central_workspace
   ]
 }
 
@@ -72,7 +73,6 @@ module "to_hub_route_table" {
   subnets             = module.spoke_vnet.created_subnets
 
   depends_on = [
-    module.hub_vnet,
     module.spoke_vnet,
     module.hub_firewall
   ]
@@ -84,6 +84,7 @@ locals {
   account_replication_type = "LRS"
   is_manual_connection     = false
   virtual_link_name        = "shira-private-endpoint-virual-link"
+  private_dns_zone_name    = "privatelink.blob.core.windows.net"
 }
 
 module "storage_account" {
@@ -93,6 +94,7 @@ module "storage_account" {
   resource_group_name        = azurerm_resource_group.spoke.name
   location                   = azurerm_resource_group.spoke.location
   account_tier               = local.account_tier
+  private_dns_zone_name      = local.private_dns_zone_name
   account_replication_type   = local.account_replication_type
   is_manual_connection       = local.is_manual_connection
   subnet_id                  = module.spoke_vnet.subnet_ids_list[0]

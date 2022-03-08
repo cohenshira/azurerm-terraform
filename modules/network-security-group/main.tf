@@ -41,4 +41,8 @@ module "network_sceurity_group_diagnostic_setting" {
   diagnostic_setting_name    = "${var.network_security_group_name}-diagnostic-settings"
   target_resource_id         = azurerm_network_security_group.network_security_group.id
   log_analytics_workspace_id = var.log_analytics_workspace_id
+
+  depends_on = [
+    azurerm_network_security_group.network_security_group
+  ]
 }

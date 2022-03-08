@@ -30,3 +30,9 @@ variable "log_analytics_workspace_id" {
   type        = string
   description = "(Required) ID for the log analytics workspace for the vnet diagnostic setting"
 }
+
+variable "enforce_private_link_endpoint_network_policies" {
+  type = bool
+  description = "if value is true, private link endpoint will be enabled on this virtual network"
+  default = true
+}

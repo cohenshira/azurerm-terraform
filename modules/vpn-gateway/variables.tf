@@ -69,7 +69,7 @@ variable "client_address_space" {
 
 variable "auth_type" {
   type        = list(string)
-  description = "(Optional) Authentication types to the gateway"
+  description = "(Required) Authentication types to the gateway"
 }
 
 variable "client_protocols" {

@@ -2,10 +2,12 @@ output "object" {
   description = "Virtual Network object"
   value       = azurerm_virtual_network.vnet
 }
+
 output "id" {
   description = "Virtual Network ID"
   value       = azurerm_virtual_network.vnet.id
 }
+
 output "name" {
   description = "Virtual Network name"
   value       = azurerm_virtual_network.vnet.name

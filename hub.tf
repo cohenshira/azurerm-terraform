@@ -10,6 +10,7 @@ resource "azurerm_resource_group" "hub" {
 locals {
   hub_vnet_name          = "shira-hub-vnet-tf"
   hub_vnet_address_space = ["10.0.0.0/16"]
+
   hub_subnets = {
     gateway_subnet = {
       name             = "GatewaySubnet"
@@ -37,7 +38,8 @@ module "hub_vnet" {
   log_analytics_workspace_id = azurerm_log_analytics_workspace.central_workspace.id
 
   depends_on = [
-    azurerm_resource_group.hub
+    azurerm_resource_group.hub,
+    azurerm_log_analytics_workspace.central_workspace
   ]
 }
 
@@ -61,10 +63,12 @@ module "hub_firewall" {
   network_rule_collection_groups     = jsondecode(templatefile("./rule_collection_groups/network_rule_collection_groups.json", local.network_collection_group_variables))
   application_rule_collection_groups = jsondecode(file("./rule_collection_groups/application_rule_collection_groups.json"))
   nat_rule_collection_groups         = jsondecode(file("./rule_collection_groups/nat_rule_collection_groups.json"))
-  subnet_id                          = lookup(module.hub_vnet.created_subnets, "AzureFirewallSubnet")
+  subnet_id                          = lookup(module.hub_vnet.created_subnets, local.hub_subnets.firewall_subnet.name)
   log_analytics_workspace_id         = azurerm_log_analytics_workspace.central_workspace.id
 
-  depends_on = [module.hub_vnet]
+  depends_on = [ 
+    module.hub_vnet,
+    ]
 }
 
 locals {
@@ -86,7 +90,7 @@ module "hub_vnet_gateway" {
   public_ips           = local.gateway_public_ips
   location             = azurerm_resource_group.hub.location
   resource_group_name  = azurerm_resource_group.hub.name
-  subnet_id            = lookup(module.hub_vnet.created_subnets, "GatewaySubnet")
+  subnet_id            = lookup(module.hub_vnet.created_subnets, local.hub_subnets.gateway_subnet.name)
   client_address_space = local.hub_client_address_space
   auth_type            = local.auth_type
   tenant_id            = var.tenant_id
@@ -114,13 +118,12 @@ module "to_spoke_route_table" {
   resource_group_name = azurerm_resource_group.hub.name
   routes              = jsondecode(templatefile("./routes/hub_routes.json", local.hub_routes_variables))
   subnets = {
-    GatewaySubnet = lookup(module.hub_vnet.created_subnets, "GatewaySubnet")
+    GatewaySubnet = lookup(module.hub_vnet.created_subnets, local.hub_subnets.gateway_subnet.name)
   }
 
   depends_on = [
     module.spoke_vnet,
-    module.hub_vnet,
-    module.hub_firewall
+    module.hub_firewall,
   ]
 }
 
@@ -160,6 +163,7 @@ module "hub_virtual_machine" {
   offer                      = local.hub_source_image_reference.offer
   image_sku                  = local.hub_source_image_reference.sku
   image_version              = local.hub_source_image_reference.version
+
   data_disks                 = {}
   log_analytics_workspace_id = azurerm_log_analytics_workspace.central_workspace.id
 

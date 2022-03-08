@@ -37,4 +37,8 @@ module "storage_account_diagnostic_setting" {
   diagnostic_setting_name    = "${var.storage_account_name}-diagnostic-settings"
   target_resource_id         = azurerm_storage_account.storage_account.id
   log_analytics_workspace_id = var.log_analytics_workspace_id
+
+  depends_on = [
+    azurerm_storage_account.storage_account
+  ]
 }
