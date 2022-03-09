@@ -10,9 +10,8 @@ resource "azurerm_resource_group" "hub" {
 locals {
   hub_vnet_name          = "shira-hub-vnet-tf"
   hub_vnet_address_space = ["10.0.0.0/16"]
-
-  hub_subnets = {
-    gateway_subnet = {
+  hub_subnets            = {
+    gateway_subnet  = {
       name             = "GatewaySubnet"
       address_prefixes = ["10.0.0.0/24"]
     },
@@ -20,7 +19,7 @@ locals {
       name             = "AzureFirewallSubnet"
       address_prefixes = ["10.0.1.0/24"]
     },
-    default_subnet = {
+    default_subnet  = {
       name             = "ShiraHubSubnet"
       address_prefixes = ["10.0.2.0/24"]
     }
@@ -44,8 +43,8 @@ module "hub_vnet" {
 }
 
 locals {
-  firewall_name        = "shira-hub-firewall-tf-final"
-  firewall_policy_name = "shira-hub-firewall-policy-tf"
+  firewall_name                      = "shira-hub-firewall-tf-final"
+  firewall_policy_name               = "shira-hub-firewall-policy-tf"
   network_collection_group_variables = {
     source_addresses    = local.hub_client_address_space[0],
     hub_address_space   = local.hub_vnet_address_space[0],
@@ -66,19 +65,19 @@ module "hub_firewall" {
   subnet_id                          = lookup(module.hub_vnet.created_subnets, local.hub_subnets.firewall_subnet.name)
   log_analytics_workspace_id         = azurerm_log_analytics_workspace.central_workspace.id
 
-  depends_on = [ 
+  depends_on = [
     module.hub_vnet,
-    ]
+  ]
 }
 
 locals {
   hub_gateway_name         = "shira-hub-gw-tf"
   hub_client_address_space = ["172.20.0.0/24"]
   auth_type                = ["AAD"]
-  gateway_public_ips = {
+  gateway_public_ips       = {
     gateway_public_ip = {
       name          = "shira-hub-gw-pip"
-      ip_allocation = "Dynamic"
+      ip_allocation = "Static"
     }
   }
 }
@@ -117,7 +116,7 @@ module "to_spoke_route_table" {
   location            = azurerm_resource_group.hub.location
   resource_group_name = azurerm_resource_group.hub.name
   routes              = jsondecode(templatefile("./routes/hub_routes.json", local.hub_routes_variables))
-  subnets = {
+  subnets             = {
     GatewaySubnet = lookup(module.hub_vnet.created_subnets, local.hub_subnets.gateway_subnet.name)
   }
 
@@ -130,7 +129,7 @@ module "to_spoke_route_table" {
 locals {
   hub_hostname = "shira-hub-vm-tf"
   hub_vm_size  = "Standard_B1s"
-  hub_os_disk = {
+  hub_os_disk  = {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
   }
@@ -146,23 +145,23 @@ locals {
 module "hub_virtual_machine" {
   source = "./modules/vm"
 
-  hostname            = local.hub_hostname
-  is_linux            = local.is_linux
-  location            = azurerm_resource_group.hub.location
-  resource_group_name = azurerm_resource_group.hub.name
-  subnet_id           = lookup(module.hub_vnet.created_subnets, local.hub_subnets.default_subnet.name)
-  vm_size             = local.hub_vm_size
+  hostname             = local.hub_hostname
+  is_linux             = local.is_linux
+  location             = azurerm_resource_group.hub.location
+  resource_group_name  = azurerm_resource_group.hub.name
+  subnet_id            = lookup(module.hub_vnet.created_subnets, local.hub_subnets.default_subnet.name)
+  vm_size              = local.hub_vm_size
   ############ Authentication ############
-  username = var.vm_user
-  password = var.password
+  username             = var.vm_user
+  password             = var.password
   ############ OS disk ############
   caching              = local.hub_os_disk.caching
   storage_account_type = local.hub_os_disk.storage_account_type
   ############ Source image reference ############
-  publisher                  = local.hub_source_image_reference.publisher
-  offer                      = local.hub_source_image_reference.offer
-  image_sku                  = local.hub_source_image_reference.sku
-  image_version              = local.hub_source_image_reference.version
+  publisher            = local.hub_source_image_reference.publisher
+  offer                = local.hub_source_image_reference.offer
+  image_sku            = local.hub_source_image_reference.sku
+  image_version        = local.hub_source_image_reference.version
 
   data_disks                 = {}
   log_analytics_workspace_id = azurerm_log_analytics_workspace.central_workspace.id

@@ -19,7 +19,7 @@ variable "vnet_address_space" {
 }
 
 variable "subnets" {
-  type = map(object({
+  type        = map(object({
     name             = string
     address_prefixes = list(string)
   }))
@@ -32,7 +32,7 @@ variable "log_analytics_workspace_id" {
 }
 
 variable "enforce_private_link_endpoint_network_policies" {
-  type = bool
+  type        = bool
   description = "if value is true, private link endpoint will be enabled on this virtual network"
-  default = true
+  default     = true
 }

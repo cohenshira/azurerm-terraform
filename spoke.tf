@@ -10,7 +10,7 @@ resource "azurerm_resource_group" "spoke" {
 locals {
   spoke_vnet_name          = "shira-spoke-vnet-tf"
   spoke_vnet_address_space = ["10.1.0.0/16"]
-  spoke_subnets = {
+  spoke_subnets            = {
     default_subnet = {
       name             = "ShiraSpokeSubnet"
       address_prefixes = ["10.1.1.0/24"]
@@ -56,7 +56,7 @@ module "spoke_network_security_group" {
 
 locals {
   spoke_route_table_name = "shira-spoke-route-table-tf"
-  spoke_route_variables = {
+  spoke_route_variables  = {
     to_hub_address_prefix     = local.hub_vnet_address_space[0],
     to_gateway_address_prefix = local.hub_client_address_space[0],
     next_hop_ip               = module.hub_firewall.firewall_private_ip
@@ -82,7 +82,6 @@ locals {
   storage_account_name     = "shiraspokesatf"
   account_tier             = "Standard"
   account_replication_type = "LRS"
-  is_manual_connection     = false
   virtual_link_name        = "shira-private-endpoint-virual-link"
   private_dns_zone_name    = "privatelink.blob.core.windows.net"
 }
@@ -96,7 +95,6 @@ module "storage_account" {
   account_tier               = local.account_tier
   private_dns_zone_name      = local.private_dns_zone_name
   account_replication_type   = local.account_replication_type
-  is_manual_connection       = local.is_manual_connection
   subnet_id                  = module.spoke_vnet.subnet_ids_list[0]
   vnet_id                    = module.spoke_vnet.id
   network_link_name          = local.virtual_link_name
@@ -111,7 +109,7 @@ locals {
   is_linux       = true
   spoke_hostname = "shira-spoke-vm-tf"
   spoke_vm_size  = "Standard_B1s"
-  spoke_os_disk = {
+  spoke_os_disk  = {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
   }
@@ -129,7 +127,13 @@ locals {
       storage_account_type = "Standard_LRS"
       create_option        = "Empty"
       disk_size_gb         = "10"
-      lun                  = "10"
+      caching              = "ReadWrite"
+    },
+    data_disk_2 = {
+      name                 = "shira-spoke-vm-data-disk-2"
+      storage_account_type = "Standard_LRS"
+      create_option        = "Empty"
+      disk_size_gb         = "10"
       caching              = "ReadWrite"
     }
   }
@@ -138,18 +142,18 @@ locals {
 module "spoke_virtual_machine" {
   source = "./modules/vm"
 
-  hostname            = local.spoke_hostname
-  location            = azurerm_resource_group.spoke.location
-  resource_group_name = azurerm_resource_group.spoke.name
-  is_linux            = local.is_linux
-  subnet_id           = lookup(module.spoke_vnet.created_subnets, local.spoke_subnets.default_subnet.name)
-  vm_size             = local.spoke_vm_size
+  hostname                   = local.spoke_hostname
+  location                   = azurerm_resource_group.spoke.location
+  resource_group_name        = azurerm_resource_group.spoke.name
+  is_linux                   = local.is_linux
+  subnet_id                  = lookup(module.spoke_vnet.created_subnets, local.spoke_subnets.default_subnet.name)
+  vm_size                    = local.spoke_vm_size
   ############ Authentication ############
-  username = var.vm_user
-  password = var.password
+  username                   = var.vm_user
+  password                   = var.password
   ############ OS disk ############
-  caching              = local.spoke_os_disk.caching
-  storage_account_type = local.spoke_os_disk.storage_account_type
+  caching                    = local.spoke_os_disk.caching
+  storage_account_type       = local.spoke_os_disk.storage_account_type
   ############ Source image reference ############
   publisher                  = local.spoke_source_image_reference.publisher
   offer                      = local.spoke_source_image_reference.offer

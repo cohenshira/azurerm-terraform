@@ -15,16 +15,16 @@ variable "firewall_policy_name" {
 
 variable "application_rule_collection_groups" {
   description = "(Required) Application rule collection groups and rules"
-  type = map(object({
-    name     = string,
-    priority = number,
+  type        = map(object({
+    name                         = string,
+    priority                     = number,
     application_rule_collections = map(object({
       name     = string,
       priority = number,
       action   = string,
-      rules = map(object({
-        name = string,
-        protocols = map(object({
+      rules    = map(object({
+        name             = string,
+        protocols        = map(object({
           protocol_type = string,
           port          = number,
         }))
@@ -39,14 +39,14 @@ variable "application_rule_collection_groups" {
 
 variable "network_rule_collection_groups" {
   description = "(Required) Network rule collection groups and rules"
-  type = map(object({
-    name     = string,
-    priority = number,
+  type        = map(object({
+    name                     = string,
+    priority                 = number,
     network_rule_collections = map(object({
       name     = string,
       priority = number,
       action   = string,
-      rules = map(object({
+      rules    = map(object({
         name                  = string
         protocols             = list(string)
         source_addresses      = list(string)
@@ -61,14 +61,14 @@ variable "network_rule_collection_groups" {
 
 variable "nat_rule_collection_groups" {
   description = "(Required) NAT rule collectio groups and rules"
-  type = map(object({
-    name     = string,
-    priority = number,
+  type        = map(object({
+    name                 = string,
+    priority             = number,
     nat_rule_collections = map(object({
       name     = string,
       priority = number,
       action   = string,
-      rules = map(object({
+      rules    = map(object({
         name                = string,
         source_addresses    = list(string),
         destination_address = string,

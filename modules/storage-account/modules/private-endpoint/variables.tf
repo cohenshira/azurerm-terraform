@@ -1,8 +1,3 @@
-variable "storage_account_name" {
-  type        = string
-  description = "(Required) Storage account name"
-}
-
 variable "resource_group_name" {
   type        = string
   description = "(Required) Resource group name for the created resources"
@@ -13,14 +8,14 @@ variable "location" {
   description = "(Required) Location for the created resources"
 }
 
-variable "account_tier" {
+variable "resource_name" {
   type        = string
-  description = "(Required) Tier to use for the storage account. Standard/Premuim"
+  description = "(Required) Target Resource name to associate the private connection"
 }
 
-variable "account_replication_type" {
+variable "resource_id" {
   type        = string
-  description = "(Required) Type of replication for the storage account"
+  description = "(Required) Target Resource ID to associate the private connection"
 }
 
 variable "subnet_id" {
@@ -47,9 +42,4 @@ variable "vnet_id" {
 variable "network_link_name" {
   type        = string
   description = "(Required) Virtual link name"
-}
-
-variable "log_analytics_workspace_id" {
-  type        = string
-  description = "(Required) ID for the log analytics workspace for the storage account diagnostic setting"
 }

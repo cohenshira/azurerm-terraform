@@ -8,7 +8,7 @@ module "firewall" {
   firewall_rule_collection_group_name = "example-rule-collection-group"
   subnet_id                           = "/subscriptions/xxx/resourceGroups/example-resource-group/providers/Microsoft.Network/virtualNetworks/example-virtual-network/subnets/AzureFirewallSubnet"
   app_rule_collection_groups          = {}
-  network_rule_collection_groups = {
+  network_rule_collection_groups      = {
     name     = "network_rule_collection_group"
     priority = 105
 
@@ -17,7 +17,7 @@ module "firewall" {
         name     = "example-network_rule_collection"
         priority = 106
         action   = "Allow"
-        rule = {
+        rule     = {
           name                  = "allowHttp"
           protocols             = ["TCP", "UDP"]
           source_addresses      = ["10.0.0.1"]
@@ -27,5 +27,5 @@ module "firewall" {
       }
     }
   }
-  nat_rule_collection_groups = {}
+  nat_rule_collection_groups          = {}
 }

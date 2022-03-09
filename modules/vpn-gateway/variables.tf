@@ -14,7 +14,7 @@ variable "resource_group_name" {
 }
 
 variable "public_ips" {
-  type = map(object({
+  type        = map(object({
     name          = string
     ip_allocation = string
   }))

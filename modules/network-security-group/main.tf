@@ -12,17 +12,17 @@ resource "azurerm_network_security_rule" "network_rules" {
   access             = each.value.access
   priority           = each.value.priority
   protocol           = each.value.protocol
-  source_port_range  = each.value.source_port_range == null ? null : each.value.source_port_range
-  source_port_ranges = each.value.source_port_ranges == [] ? [] : each.value.source_port_ranges
+  source_port_range  = each.value.source_port_range
+  source_port_ranges = each.value.source_port_ranges
 
-  destination_port_range  = each.value.destination_port_range == null ? null : each.value.destination_port_range
-  destination_port_ranges = each.value.destination_port_ranges == [] ? [] : each.value.destination_port_ranges
+  destination_port_range  = each.value.destination_port_range
+  destination_port_ranges = each.value.destination_port_ranges
 
-  source_address_prefix   = each.value.source_address_prefix == null ? null : each.value.source_address_prefix
-  source_address_prefixes = each.value.source_address_prefixes == [] ? [] : each.value.source_address_prefixes
+  source_address_prefix   = each.value.source_address_prefix
+  source_address_prefixes = each.value.source_address_prefixes
 
-  destination_address_prefix   = each.value.destination_address_prefix == null ? null : each.value.destination_address_prefix
-  destination_address_prefixes = each.value.destination_address_prefixes == [] ? [] : each.value.destination_address_prefixes
+  destination_address_prefix   = each.value.destination_address_prefix
+  destination_address_prefixes = each.value.destination_address_prefixes
 
   resource_group_name         = var.resource_group_name
   network_security_group_name = azurerm_network_security_group.network_security_group.name

@@ -16,7 +16,7 @@ resource "azurerm_route_table" "route_table" {
 }
 
 resource "azurerm_subnet_route_table_association" "subnet_association" {
-  for_each       = var.subnets
+  for_each = var.subnets
 
   subnet_id      = each.value
   route_table_id = azurerm_route_table.route_table.id

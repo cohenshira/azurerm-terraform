@@ -89,15 +89,23 @@ variable "is_linux" {
 
 variable "data_disks" {
   description = "(Optional) map of data disk to add to the virtual machine"
-  type = map(object({
+  type        = map(object({
     name                 = string
     storage_account_type = string
     create_option        = string
     disk_size_gb         = string
-    lun                  = string
-    caching              = string
+    caching              = optional(string)
   }))
-  default = {}
+
+  default = {
+    "key" = {
+      caching              = "ReadWrite"
+      create_option        = null
+      disk_size_gb         = 10
+      name                 = null
+      storage_account_type = null
+    }
+  }
 }
 
 variable "log_analytics_workspace_id" {

@@ -1,5 +1,5 @@
 module "two-way-peering" {
-  source                = "./modules/two-way-peering"
+  source = "./modules/two-way-peering"
 
   resource_group_name_1 = "example-rg-1"
   resource_group_name_2 = "example-rg-2"

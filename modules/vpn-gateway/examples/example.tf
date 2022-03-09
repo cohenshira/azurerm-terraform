@@ -1,10 +1,10 @@
 module "vpn-gateway" {
   source = "./modules/vpn-gateway"
 
-  gateway_name        = "example-virtual-network-gateway"
-  location            = "westeurope"
-  resource_group_name = "example-resource-group"
-  public_ips = {
+  gateway_name         = "example-virtual-network-gateway"
+  location             = "westeurope"
+  resource_group_name  = "example-resource-group"
+  public_ips           = {
     gateway_public_ip = {
       name          = "example-hub-gw-pip"
       ip_allocation = "Dynamic"

@@ -5,7 +5,7 @@ resource "azurerm_firewall_policy" "firewall_policy" {
 }
 
 resource "azurerm_firewall_policy_rule_collection_group" "firewall_network_rule_collection_group" {
-  for_each           = var.network_rule_collection_groups
+  for_each = var.network_rule_collection_groups
 
   name               = each.value.name
   firewall_policy_id = azurerm_firewall_policy.firewall_policy.id
@@ -33,7 +33,7 @@ resource "azurerm_firewall_policy_rule_collection_group" "firewall_network_rule_
 }
 
 resource "azurerm_firewall_policy_rule_collection_group" "firewall_application_rule_collection_group" {
-  for_each           = var.application_rule_collection_groups
+  for_each = var.application_rule_collection_groups
 
   name               = each.value.name
   priority           = each.value.priority
@@ -67,7 +67,7 @@ resource "azurerm_firewall_policy_rule_collection_group" "firewall_application_r
 }
 
 resource "azurerm_firewall_policy_rule_collection_group" "firewall_nat_rule_collection_group" {
-  for_each           = var.nat_rule_collection_groups
+  for_each = var.nat_rule_collection_groups
 
   name               = each.value.name
   priority           = each.value.priority
