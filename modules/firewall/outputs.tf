@@ -3,6 +3,11 @@ output "firewall_private_ip" {
   value       = azurerm_firewall.firewall.ip_configuration[0].private_ip_address
 }
 
+output "firewall_public_ip" {
+  description = "Firewall public IP"
+  value       = azurerm_public_ip.pip.ip_address
+}
+
 output "object" {
   description = "Firewall object"
   value       = azurerm_firewall.firewall

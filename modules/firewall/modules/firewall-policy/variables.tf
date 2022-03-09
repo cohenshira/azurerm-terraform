@@ -71,14 +71,24 @@ variable "nat_rule_collection_groups" {
       rules    = map(object({
         name                = string,
         source_addresses    = list(string),
-        destination_address = string,
+        destination_address = optional(string),
         destination_ports   = list(string),
         translated_port     = string,
-        translated_address  = string,
+        translated_address  = optional(string),
         protocols           = list(string)
       }))
     }))
   }))
 
   default = {}
+}
+
+variable "firewall_private_ip" {
+  type = string
+  description = "Firewall private IP address"
+}
+
+variable "firewall_public_ip" {
+  type = string
+  description = "Firewall public IP address"
 }

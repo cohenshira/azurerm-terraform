@@ -93,10 +93,10 @@ variable "nat_rule_collection_groups" {
       rules    = map(object({
         name                = string,
         source_addresses    = list(string),
-        destination_address = string,
+        destination_address = optional(string),
         destination_ports   = list(string),
         translated_port     = string,
-        translated_address  = string,
+        translated_address  = optional(string),
         protocols           = list(string)
       }))
     }))

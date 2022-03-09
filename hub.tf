@@ -50,6 +50,7 @@ locals {
     hub_address_space   = local.hub_vnet_address_space[0],
     spoke_address_space = local.spoke_vnet_address_space[0]
   }
+
 }
 
 module "hub_firewall" {
@@ -163,7 +164,6 @@ module "hub_virtual_machine" {
   image_sku            = local.hub_source_image_reference.sku
   image_version        = local.hub_source_image_reference.version
 
-  data_disks                 = {}
   log_analytics_workspace_id = azurerm_log_analytics_workspace.central_workspace.id
 
   depends_on = [

@@ -93,10 +93,10 @@ resource "azurerm_firewall_policy_rule_collection_group" "firewall_nat_rule_coll
         content {
           name                = rule.value.name
           source_addresses    = rule.value.source_addresses[*]
-          destination_address = rule.value.destination_address
+          destination_address = var.firewall_public_ip
           destination_ports   = rule.value.destination_ports[*]
           translated_port     = rule.value.translated_port
-          translated_address  = rule.value.translated_address
+          translated_address  = var.firewall_private_ip
           protocols           = rule.value.protocols[*]
         }
       }

@@ -11,11 +11,11 @@
                     "rule": {
                         "name": "nat_rule",
                         "protocols": ["TCP"],
-                        "source_addresses": ["10.0.0.1"],
-                        "destination_address": "10.0.2.4",
+                        "source_addresses": ["*"],
+                        "destination_address": "${firewall_public_ip}",
                         "destination_ports": ["80"],
                         "translated_port": "8080",
-                        "translated_address": "172.20.0.4"
+                        "translated_address": "${firewall_private_ip}"
                     }
                 }
             }
