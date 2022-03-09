@@ -33,7 +33,7 @@ variable "network_security_group_rules" {
 }
 
 variable "subnets" {
-  type        = map(any)
+  type        = map
   description = "(Required) map of subnets names and its ids to associate the network security group"
 }
 
