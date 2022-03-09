@@ -85,7 +85,7 @@ resource "azurerm_virtual_machine_data_disk_attachment" "data_disk_attachment" {
   managed_disk_id    = azurerm_managed_disk.data_disk[each.key].id
   virtual_machine_id = var.is_linux ? azurerm_linux_virtual_machine.linux_vm.0.id : azurerm_windows_virtual_machine.windows_vm.0.id
   lun                = index(keys(var.data_disks), each.key)
-  caching            = each.value.caching
+  caching            = coalesce(each.value.cahing, var.caching)
 }
 
 module "virtual_machine_diagnostic_setting" {

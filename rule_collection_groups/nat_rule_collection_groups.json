@@ -2,6 +2,23 @@
     "nat_rule_collection_group" : {
         "name" : "shira-firewall-nat-collection-group",
         "priority": 103,
-        "nat_rule_collections": {}
+        "nat_rule_collections": {
+            "nat_rule_collection": {
+                "name": "nat-rule-collection",
+                "priority": 300,
+                "action": "Dnat",
+                "rules": {
+                    "rule": {
+                        "name": "nat_rule",
+                        "protocols": ["TCP"],
+                        "source_addresses": ["10.0.0.1"],
+                        "destination_address": "10.0.2.4",
+                        "destination_ports": ["80"],
+                        "translated_port": "8080",
+                        "translated_address": "172.20.0.4"
+                    }
+                }
+            }
+        }
     }
 }

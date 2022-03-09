@@ -2,6 +2,29 @@
     "application_rule_collection_group": {
         "name": "shira-firewall-application-collection-group",
         "priority": 102,
-        "application_rule_collections": {}
+        "application_rule_collections": {
+            "application_rule_collection": {
+                "name": "application-rule-collection",
+                "priority": 1004,
+                "action": "Allow",
+                "rules": {
+                    "rule": {
+                        "name": "AllowHttp",
+                        "protocols": {
+                            "http": {
+                                "protocol_type": "Http",
+                                "port": 80
+                            }
+                        },
+                        "source_addresses": [
+                            "10.0.0.0/16"
+                        ],
+                        "target_fqdns": [
+                            ".google.com"
+                        ]
+                    }
+                }
+            }
+        }
     }
 }

@@ -27,7 +27,5 @@ variable "routes" {
     next_hop_ip    = optional(string)
   }))
 
-  default = {
-    next_hop_ip = null
-  }
+  default = {}
 }

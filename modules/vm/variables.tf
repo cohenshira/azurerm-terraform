@@ -75,11 +75,13 @@ variable "image_version" {
 variable "caching" {
   type        = string
   description = "(Required) Caching type for the internal OS disk. Can be ReadWrite, ReadOnly or None"
+  default     = "Readwrite"
 }
 
 variable "storage_account_type" {
   type        = string
-  description = "(Required) Type of sku redundancy for the OS disk"
+  description = "(Optional) Type of sku redundancy for the OS disk"
+  default     = "Standard_LRS"
 }
 
 variable "is_linux" {
@@ -89,7 +91,7 @@ variable "is_linux" {
 
 variable "data_disks" {
   description = "(Optional) map of data disk to add to the virtual machine"
-  type        = map(object({
+  type = map(object({
     name                 = string
     storage_account_type = string
     create_option        = string
@@ -97,15 +99,7 @@ variable "data_disks" {
     caching              = optional(string)
   }))
 
-  default = {
-    "key" = {
-      caching              = "ReadWrite"
-      create_option        = null
-      disk_size_gb         = 10
-      name                 = null
-      storage_account_type = null
-    }
-  }
+  default = {}
 }
 
 variable "log_analytics_workspace_id" {

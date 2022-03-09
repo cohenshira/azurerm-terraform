@@ -30,6 +30,10 @@ resource "azurerm_firewall_policy_rule_collection_group" "firewall_network_rule_
       }
     }
   }
+
+  depends_on = [
+    azurerm_firewall_policy.firewall_policy
+  ]
 }
 
 resource "azurerm_firewall_policy_rule_collection_group" "firewall_application_rule_collection_group" {
@@ -64,6 +68,10 @@ resource "azurerm_firewall_policy_rule_collection_group" "firewall_application_r
       }
     }
   }
+
+  depends_on = [
+    azurerm_firewall_policy_rule_collection_group.firewall_network_rule_collection_group
+  ]
 }
 
 resource "azurerm_firewall_policy_rule_collection_group" "firewall_nat_rule_collection_group" {
@@ -94,4 +102,8 @@ resource "azurerm_firewall_policy_rule_collection_group" "firewall_nat_rule_coll
       }
     }
   }
+
+  depends_on = [
+    azurerm_firewall_policy_rule_collection_group.firewall_application_rule_collection_group
+  ]
 }
