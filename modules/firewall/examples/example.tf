@@ -5,7 +5,6 @@ module "firewall" {
   resource_group_name                 = "example-resource-group"
   firewall_name                       = "example-firewall-name"
   firewall_policy_name                = "example-firewall-policy"
-  firewall_rule_collection_group_name = "example-rule-collection-group"
   subnet_id                           = "/subscriptions/xxx/resourceGroups/example-resource-group/providers/Microsoft.Network/virtualNetworks/example-virtual-network/subnets/AzureFirewallSubnet"
   app_rule_collection_groups          = {}
   network_rule_collection_groups      = {

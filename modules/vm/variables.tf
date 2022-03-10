@@ -74,7 +74,7 @@ variable "image_version" {
 
 variable "caching" {
   type        = string
-  description = "(Required) Caching type for the internal OS disk. Can be ReadWrite, ReadOnly or None"
+  description = "(Optional) Caching type for the internal OS disk. Can be ReadWrite, ReadOnly or None"
   default     = "Readwrite"
 }
 

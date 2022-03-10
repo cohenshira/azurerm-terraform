@@ -52,7 +52,7 @@ locals {
   }
 
   nat_rule_collection_group_variables = {
-    translated_address = "10.0.1.4"
+    translated_address = ""
   }
 }
 

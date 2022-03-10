@@ -53,7 +53,9 @@ resource "azurerm_firewall_policy_rule_collection_group" "firewall_application_r
       dynamic "rule" {
         for_each = application_rule_collection.value.rules
         content {
-          name = rule.value.name
+          name              = rule.value.name
+          source_addresses  = rule.value.source_addresses[*]
+          destination_fqdns = rule.value.target_fqdns[*]
 
           dynamic "protocols" {
             for_each = rule.value.protocols
@@ -62,8 +64,6 @@ resource "azurerm_firewall_policy_rule_collection_group" "firewall_application_r
               port = protocols.value.port
             }
           }
-          source_addresses  = rule.value.source_addresses[*]
-          destination_fqdns = rule.value.target_fqdns[*]
         }
       }
     }
