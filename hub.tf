@@ -52,7 +52,7 @@ locals {
   }
 
   nat_rule_collection_group_variables = {
-    translated_address = ""
+    translated_address = module.hub_virtual_machine.private_ip
   }
 }
 

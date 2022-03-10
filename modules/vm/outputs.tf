@@ -15,5 +15,5 @@ output "name" {
 
 output "private_ip" {
   description = "Virtual Machine private IP address"
-  value       = var.is_linux ? azurerm_linux_virtual_machine.linux_vm.0.private_ip_address : azurerm_windows_virtual_machine.windows_vm.0.private_ip_address
+  value       = azurerm_network_interface.vm_network_interface.private_ip_address
 }
