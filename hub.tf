@@ -51,6 +51,9 @@ locals {
     spoke_address_space = local.spoke_vnet_address_space[0]
   }
 
+  nat_rule_collection_group_variables = {
+    translated_address = "10.0.1.4"
+  }
 }
 
 module "hub_firewall" {
@@ -62,12 +65,13 @@ module "hub_firewall" {
   resource_group_name                = azurerm_resource_group.hub.name
   network_rule_collection_groups     = jsondecode(templatefile("./rule_collection_groups/network_rule_collection_groups.json", local.network_collection_group_variables))
   application_rule_collection_groups = jsondecode(file("./rule_collection_groups/application_rule_collection_groups.json"))
-  nat_rule_collection_groups         = jsondecode(file("./rule_collection_groups/nat_rule_collection_groups.json"))
+  nat_rule_collection_groups         = jsondecode(templatefile("./rule_collection_groups/nat_rule_collection_groups.json", local.nat_rule_collection_group_variables))
   subnet_id                          = lookup(module.hub_vnet.created_subnets, local.hub_subnets.firewall_subnet.name)
   log_analytics_workspace_id         = azurerm_log_analytics_workspace.central_workspace.id
 
   depends_on = [
     module.hub_vnet,
+    module.hub_virtual_machine
   ]
 }
 

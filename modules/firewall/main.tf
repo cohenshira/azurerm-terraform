@@ -15,7 +15,6 @@ module "firewall_policy" {
   network_rule_collection_groups     = var.network_rule_collection_groups
   application_rule_collection_groups = var.application_rule_collection_groups
   nat_rule_collection_groups         = var.nat_rule_collection_groups
-  firewall_private_ip                = azurerm_firewall.firewall.ip_configuration[0].private_ip_address
   firewall_public_ip                 = azurerm_public_ip.pip.ip_address
 }
 

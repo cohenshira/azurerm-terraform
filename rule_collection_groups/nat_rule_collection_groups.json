@@ -12,10 +12,9 @@
                         "name": "nat_rule",
                         "protocols": ["TCP"],
                         "source_addresses": ["*"],
-                        "destination_address": "${firewall_public_ip}",
                         "destination_ports": ["80"],
                         "translated_port": "8080",
-                        "translated_address": "${firewall_private_ip}"
+                        "translated_address": "${translated_address}"
                     }
                 }
             }

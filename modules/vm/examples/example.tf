@@ -22,7 +22,6 @@ module "virtual_machine" {
       storage_account_type = "Standard_LRS"
       create_option        = "Empty"
       disk_size_gb         = "10"
-      lun                  = "10"
       caching              = "ReadWrite"
     }
   }

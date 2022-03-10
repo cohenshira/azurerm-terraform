@@ -74,18 +74,13 @@ variable "nat_rule_collection_groups" {
         destination_address = optional(string),
         destination_ports   = list(string),
         translated_port     = string,
-        translated_address  = optional(string),
+        translated_address  = string,
         protocols           = list(string)
       }))
     }))
   }))
 
   default = {}
-}
-
-variable "firewall_private_ip" {
-  type = string
-  description = "Firewall private IP address"
 }
 
 variable "firewall_public_ip" {
