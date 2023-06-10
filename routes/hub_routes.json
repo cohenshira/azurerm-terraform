@@ -1,0 +1,8 @@
+{
+    "ToSpoke": {
+        "name": "ToSpoke",
+        "address_prefix": "${address_prefix}",
+        "next_hop_type" : "VirtualAppliance",
+        "next_hop_ip": "${next_hop_ip}"
+    }
+}

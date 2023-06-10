@@ -1,0 +1,25 @@
+{
+    "network_rule_collection_group": {
+        "name": "shira-firewall-network-collection-group",
+        "priority": 101,
+        "network_rule_collections": {
+            "network_rule_collection": {
+                "name": "network_rule_collection",
+                "priority": 102,
+                "action": "Allow",
+                "rules": {
+                    "allowssh": {
+                        "name": "allowSsh",
+                        "protocols": ["TCP"],
+                        "source_addresses": ["${source_addresses}"],
+                        "destination_addresses": [
+                            "${hub_address_space}",
+                            "${spoke_address_space}"
+                        ],
+                        "destination_ports": ["22"]
+                    }
+                }
+            }
+        }
+    }
+}
